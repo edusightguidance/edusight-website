@@ -67,8 +67,20 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    services: Service;
+    careers: Career;
+    posts: Post;
+    testimonials: Testimonial;
+    pages: Page;
     media: Media;
+    books: Book;
+    products: Product;
+    orders: Order;
+    'private-files': PrivateFile;
+    tests: Test;
+    attempts: Attempt;
+    users: User;
+    inquiries: Inquiry;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,19 +88,39 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    careers: CareersSelect<false> | CareersSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    books: BooksSelect<false> | BooksSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    'private-files': PrivateFilesSelect<false> | PrivateFilesSelect<true>;
+    tests: TestsSelect<false> | TestsSelect<true>;
+    attempts: AttemptsSelect<false> | AttemptsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    homepage: Homepage;
+    about: About;
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,36 +151,84 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "services".
  */
-export interface User {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
+export interface Service {
+  id: number;
+  title: string;
+  kind: 'service' | 'specialization';
+  tagline?: string | null;
+  summary: string;
+  icon?:
+    | (
+        | 'compass'
+        | 'book'
+        | 'cap'
+        | 'globe'
+        | 'heart'
+        | 'users'
+        | 'spark'
+        | 'chart'
+        | 'stethoscope'
+        | 'cog'
+        | 'scale'
+        | 'palette'
+        | 'brain'
+        | 'briefcase'
+        | 'leaf'
+        | 'school'
+      )
+    | null;
+  image?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  points?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        title: string;
+        text?: string | null;
+        id?: string | null;
       }[]
     | null;
-  password?: string | null;
-  collection: 'users';
+  audience?: ('Students' | 'Parents' | 'Schools' | 'Graduates')[] | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
-  alt: string;
+  id: number;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -163,10 +243,399 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers".
+ */
+export interface Career {
+  id: number;
+  title: string;
+  stream: 'bio' | 'eng' | 'com' | 'hum' | 'combo';
+  /**
+   * Used by the Career Explorer to match students
+   */
+  riasec?: ('R' | 'I' | 'A' | 'S' | 'E' | 'C')[] | null;
+  summary: string;
+  dayToDay?: string | null;
+  subjects?: string | null;
+  routes?: string | null;
+  entryTests?: string | null;
+  skills?: string | null;
+  outlook?: ('hot' | 'growing' | 'stable') | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  category?: ('guide' | 'myth' | 'parenting' | 'event' | 'news') | null;
+  excerpt: string;
+  image?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  publishedAt?: string | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  name: string;
+  /**
+   * e.g. Parent of Grade 11 student, Dubai
+   */
+  detail?: string | null;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Simple pages such as Privacy Policy or Terms. They appear at /p/your-slug
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books".
+ */
+export interface Book {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  cover?: (number | null) | Media;
+  /**
+   * Used when no cover image is uploaded
+   */
+  coverColor?: string | null;
+  description: string;
+  /**
+   * e.g. Grades 9–12 and parents
+   */
+  audience?: string | null;
+  price: number;
+  format?: ('ebook' | 'print' | 'both') | null;
+  /**
+   * PDF buyers download after paying (kept private)
+   */
+  ebookFile?: (number | null) | PrivateFile;
+  /**
+   * Optional: Amazon or other store link
+   */
+  externalLink?: string | null;
+  comingSoon?: boolean | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "private-files".
+ */
+export interface PrivateFile {
+  id: number;
+  title?: string | null;
+  /**
+   * Set for personal reports
+   */
+  owner?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name: string;
+  role: 'superadmin' | 'editor' | 'student' | 'parent' | 'teacher';
+  phone?: string | null;
+  dateOfBirth?: string | null;
+  grade?: string | null;
+  school?: string | null;
+  /**
+   * e.g. IB, A-Level, CBSE, American
+   */
+  curriculum?: string | null;
+  subjects?: string | null;
+  hobbies?: string | null;
+  dream?: string | null;
+  shortlist?: (number | Career)[] | null;
+  parentName?: string | null;
+  parentEmail?: string | null;
+  consentStatus?: ('not_required' | 'pending' | 'granted') | null;
+  consentAt?: string | null;
+  consentToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * Anything a student or school can buy. It appears in their portal after payment.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  title: string;
+  kind: 'assessment' | 'explorer' | 'booking';
+  tagline?: string | null;
+  summary: string;
+  price: number;
+  compareAt?: number | null;
+  accessMonths?: number | null;
+  tests?: (number | Test)[] | null;
+  includesExplorer?: boolean | null;
+  features?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Highlight this plan
+   */
+  featured?: boolean | null;
+  slug: string;
+  published?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tests".
+ */
+export interface Test {
+  id: number;
+  name: string;
+  code: string;
+  intro?: string | null;
+  minutes?: number | null;
+  dimensions?:
+    | {
+        key: string;
+        label: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Each answer is 1–5. A scale score is the sum of its questions.
+   */
+  questions?:
+    | {
+        text: string;
+        dimension: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  reference?: string | null;
+  user: number | User;
+  product?: (number | null) | Product;
+  book?: (number | null) | Book;
+  itemTitle?: string | null;
+  amount?: number | null;
+  status?: ('pending' | 'paid' | 'refunded' | 'cancelled') | null;
+  shippingAddress?: string | null;
+  stripeSessionId?: string | null;
+  paidAt?: string | null;
+  expiresAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Review a submitted test: read the scores, edit Recommendations, then set Status to "Approved – send report" and Save. The PDF is created and emailed automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attempts".
+ */
+export interface Attempt {
+  id: number;
+  title?: string | null;
+  status?: ('not_started' | 'in_progress' | 'submitted' | 'approved' | 'sent') | null;
+  user: number | User;
+  test: number | Test;
+  order?: (number | null) | Order;
+  scoreSummary?: string | null;
+  /**
+   * Pre-filled from the scores. Edit freely — this text goes into the PDF report.
+   */
+  recommendations?: string | null;
+  counsellorNotes?: string | null;
+  report?: (number | null) | PrivateFile;
+  answers?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  scores?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  startedAt?: string | null;
+  submittedAt?: string | null;
+  sentAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  grade?: string | null;
+  topic?: string | null;
+  message?: string | null;
+  status?: ('new' | 'contacted' | 'converted' | 'closed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +652,68 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'careers';
+        value: number | Career;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'books';
+        value: number | Book;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'private-files';
+        value: number | PrivateFile;
+      } | null)
+    | ({
+        relationTo: 'tests';
+        value: number | Test;
+      } | null)
+    | ({
+        relationTo: 'attempts';
+        value: number | Attempt;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'inquiries';
+        value: number | Inquiry;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +723,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +746,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -237,25 +754,108 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "services_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  tagline?: T;
+  summary?: T;
+  icon?: T;
+  image?: T;
+  body?: T;
+  points?:
     | T
     | {
+        title?: T;
+        text?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  audience?: T;
+  slug?: T;
+  published?: T;
+  order?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "careers_select".
+ */
+export interface CareersSelect<T extends boolean = true> {
+  title?: T;
+  stream?: T;
+  riasec?: T;
+  summary?: T;
+  dayToDay?: T;
+  subjects?: T;
+  routes?: T;
+  entryTests?: T;
+  skills?: T;
+  outlook?: T;
+  slug?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  excerpt?: T;
+  image?: T;
+  body?: T;
+  publishedAt?: T;
+  slug?: T;
+  published?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  quote?: T;
+  name?: T;
+  detail?: T;
+  published?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  slug?: T;
+  published?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -274,6 +874,196 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books_select".
+ */
+export interface BooksSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  cover?: T;
+  coverColor?: T;
+  description?: T;
+  audience?: T;
+  price?: T;
+  format?: T;
+  ebookFile?: T;
+  externalLink?: T;
+  comingSoon?: T;
+  slug?: T;
+  published?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  tagline?: T;
+  summary?: T;
+  price?: T;
+  compareAt?: T;
+  accessMonths?: T;
+  tests?: T;
+  includesExplorer?: T;
+  features?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  featured?: T;
+  slug?: T;
+  published?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  reference?: T;
+  user?: T;
+  product?: T;
+  book?: T;
+  itemTitle?: T;
+  amount?: T;
+  status?: T;
+  shippingAddress?: T;
+  stripeSessionId?: T;
+  paidAt?: T;
+  expiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "private-files_select".
+ */
+export interface PrivateFilesSelect<T extends boolean = true> {
+  title?: T;
+  owner?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tests_select".
+ */
+export interface TestsSelect<T extends boolean = true> {
+  name?: T;
+  code?: T;
+  intro?: T;
+  minutes?: T;
+  dimensions?:
+    | T
+    | {
+        key?: T;
+        label?: T;
+        description?: T;
+        id?: T;
+      };
+  questions?:
+    | T
+    | {
+        text?: T;
+        dimension?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attempts_select".
+ */
+export interface AttemptsSelect<T extends boolean = true> {
+  title?: T;
+  status?: T;
+  user?: T;
+  test?: T;
+  order?: T;
+  scoreSummary?: T;
+  recommendations?: T;
+  counsellorNotes?: T;
+  report?: T;
+  answers?: T;
+  scores?: T;
+  startedAt?: T;
+  submittedAt?: T;
+  sentAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  phone?: T;
+  dateOfBirth?: T;
+  grade?: T;
+  school?: T;
+  curriculum?: T;
+  subjects?: T;
+  hobbies?: T;
+  dream?: T;
+  shortlist?: T;
+  parentName?: T;
+  parentEmail?: T;
+  consentStatus?: T;
+  consentAt?: T;
+  consentToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  grade?: T;
+  topic?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +1104,184 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: number;
+  eyebrow?: string | null;
+  heading?: string | null;
+  /**
+   * The word shown with the hand-drawn underline
+   */
+  highlight?: string | null;
+  subheading?: string | null;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  methodTitle?: string | null;
+  method?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  ctaTitle?: string | null;
+  ctaText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  photo?: (number | null) | Media;
+  headline?: string | null;
+  role?: string | null;
+  intro?: string | null;
+  story?: string | null;
+  approach?: string | null;
+  expertise?:
+    | {
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  awards?:
+    | {
+        title: string;
+        year?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  /**
+   * Optional banner at the very top of every page. Leave empty to hide.
+   */
+  announcement?: string | null;
+  announcementLink?: string | null;
+  phone?: string | null;
+  /**
+   * Digits only, with country code
+   */
+  whatsapp?: string | null;
+  email?: string | null;
+  address?: string | null;
+  licence?: string | null;
+  socials?: {
+    instagram?: string | null;
+    facebook?: string | null;
+    linkedin?: string | null;
+    youtube?: string | null;
+  };
+  /**
+   * Where "Book a consultation" goes (Calendly, WhatsApp, etc.). Empty = contact page.
+   */
+  bookingLink?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  highlight?: T;
+  subheading?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  methodTitle?: T;
+  method?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  ctaTitle?: T;
+  ctaText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  photo?: T;
+  headline?: T;
+  role?: T;
+  intro?: T;
+  story?: T;
+  approach?: T;
+  expertise?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  awards?:
+    | T
+    | {
+        title?: T;
+        year?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  announcement?: T;
+  announcementLink?: T;
+  phone?: T;
+  whatsapp?: T;
+  email?: T;
+  address?: T;
+  licence?: T;
+  socials?:
+    | T
+    | {
+        instagram?: T;
+        facebook?: T;
+        linkedin?: T;
+        youtube?: T;
+      };
+  bookingLink?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
