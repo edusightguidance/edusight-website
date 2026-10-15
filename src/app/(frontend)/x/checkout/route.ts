@@ -39,7 +39,7 @@ async function handle(req: Request) {
     try {
       session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card'],
+      allowed_payment_method_types: ['card'],
       customer_email: user.email,
       line_items: [{ quantity: 1, price_data: { currency: 'aed', unit_amount: Math.round(item.price * 100), product_data: { name: item.title } } }],
       metadata: { orderId: String(order.id), reference },
