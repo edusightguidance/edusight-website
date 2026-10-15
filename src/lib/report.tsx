@@ -1,8 +1,10 @@
 import React from 'react'
-import { Document, Page, Text, View, StyleSheet, renderToBuffer } from '@react-pdf/renderer'
+import path from 'path'
+import { Document, Image, Page, Text, View, StyleSheet, renderToBuffer } from '@react-pdf/renderer'
 import { band, ranked, type Scores } from './scoring'
 
 const C = { ink: '#16163F', coral: '#FF6B4A', marigold: '#FFB627', lagoon: '#0FA3A3', lilac: '#EEEAFF', paper: '#FBF8F3', mute: '#5B5B78' }
+const LOGO = path.join(process.cwd(), 'public', 'logo.png')
 const BARS = [C.coral, C.lagoon, C.marigold, '#7C6CF0', '#E2557B', '#3BAA6E', '#2F7FD8', '#B4772E']
 
 const s = StyleSheet.create({
@@ -38,8 +40,14 @@ function Report({ user, test, attempt }: Props) {
     <Document title={`${user.name} – ${test.name}`} author="EDUSIGHT">
       <Page size="A4" style={s.page}>
         <View style={s.head}>
-          <Text style={s.brand}>EDUSIGHT</Text>
-          <Text style={s.tag}>CLARITY · CONFIDENCE · DIRECTION</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image src={LOGO} style={{ width: 54, height: 54, marginRight: 12 }} />
+            <View>
+              <Text style={s.brand}>EDUSIGHT</Text>
+              <Text style={s.tag}>CLARITY · CONFIDENCE · DIRECTION</Text>
+            </View>
+          </View>
           <Text style={s.title}>{test.name} Report</Text>
         </View>
         <View style={s.body}>

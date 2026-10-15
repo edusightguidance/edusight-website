@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // The PDF report embeds the logo from disk, so ship it with the server functions.
+  outputFileTracingIncludes: { '/**': ['./public/logo.png'] },
   images: {
     localPatterns: [
       {

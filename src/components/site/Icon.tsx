@@ -34,14 +34,10 @@ export function Icon({ name, size = 24, stroke = 2 }: { name: string; size?: num
 
 export const TINTS = ['t-coral', 't-lagoon', 't-marigold', 't-lilac']
 
-export function Mark({ size = 38 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
-      <rect width="40" height="40" rx="12" fill="#16163F" />
-      <path d="M12 26 L20 10 L28 26" stroke="#FFB627" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="20" cy="27" r="3.2" fill="#FF6B4A" />
-    </svg>
-  )
+export function Mark({ size = 60 }: { size?: number }) {
+  // Official EDUSIGHT logo — always use this file (public/logo.png).
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src="/logo.png" width={size} height={size} alt="EDUSIGHT logo" style={{ width: size, height: size, flexShrink: 0 }} />
 }
 
 export function Hl({ children, color = '#FFB627' }: { children: React.ReactNode; color?: string }) {
