@@ -48,3 +48,7 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# uploaded files and generated reports (stored in Cloudflare R2 in production)
+/private-files
+/media
