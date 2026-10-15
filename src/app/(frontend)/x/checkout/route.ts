@@ -3,6 +3,15 @@ import { db, getUser } from '@/lib/data'
 import { bypassPayments, fulfil, stripe } from '@/lib/commerce'
 
 export async function POST(req: Request) {
+  try {
+    return await handle(req)
+  } catch (e) {
+    console.error('checkout failed', e)
+    return NextResponse.json({ error: `Checkout error: ${(e as Error).message}` }, { status: 500 })
+  }
+}
+
+async function handle(req: Request) {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'login' }, { status: 401 })
   const { product: pslug, book: bslug, shippingAddress } = await req.json().catch(() => ({}))
@@ -26,7 +35,9 @@ export async function POST(req: Request) {
   })
 
   if (stripe) {
-    const session = await stripe.checkout.sessions.create({
+    let session
+    try {
+      session = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer_email: user.email,
       line_items: [{ quantity: 1, price_data: { currency: 'aed', unit_amount: Math.round(item.price * 100), product_data: { name: item.title } } }],
@@ -34,6 +45,12 @@ export async function POST(req: Request) {
       success_url: `${site}/portal?paid=${reference}`,
       cancel_url: `${site}/${kind === 'book' ? 'books' : 'assessments'}?cancelled=1`,
     })
+    } catch (e) {
+      const msg = (e as Error).message || 'Stripe error'
+      payload.logger.error(`checkout: ${msg}`)
+      await payload.update({ collection: 'orders', id: order.id, data: { status: 'cancelled' }, overrideAccess: true })
+      return NextResponse.json({ error: `Payment could not start: ${msg}` }, { status: 502 })
+    }
     await payload.update({ collection: 'orders', id: order.id, data: { stripeSessionId: session.id }, overrideAccess: true })
     return NextResponse.json({ url: session.url })
   }
