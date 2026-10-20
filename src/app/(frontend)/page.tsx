@@ -2,6 +2,11 @@ import Link from 'next/link'
 import { db, getSettings } from '@/lib/data'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
 import { QuickMatch } from '@/components/site/QuickMatch'
+import { findPosts } from '@/lib/blog'
+import { findReviews, ratingSummary } from '@/lib/reviews'
+import { PostCard } from '@/components/site/PostCard'
+import { ReviewCard, Stars } from '@/components/site/ReviewCard'
+import { Carousel } from '@/components/site/Carousel'
 
 export const revalidate = 60
 
@@ -42,15 +47,17 @@ function HeroArt() {
 
 export default async function Home() {
   const payload = await db()
-  const [home, s, services, specs, products, quotes, posts] = await Promise.all([
+  const [home, s, services, specs, products, featured, posts, sum] = await Promise.all([
     payload.findGlobal({ slug: 'homepage' }),
     getSettings(),
     payload.find({ collection: 'services', where: { kind: { equals: 'service' } }, limit: 6, sort: 'order' }),
     payload.find({ collection: 'services', where: { kind: { equals: 'specialization' } }, limit: 8, sort: 'order' }),
     payload.find({ collection: 'products', where: { published: { equals: true } }, limit: 3, sort: 'order' }),
-    payload.find({ collection: 'testimonials', limit: 3, sort: 'order' }),
-    payload.find({ collection: 'posts', limit: 3 }),
+    findReviews({ featured: true, limit: 12 }),
+    findPosts({ limit: 3 }),
+    ratingSummary(),
   ])
+  const quotes = featured.docs.length ? featured : await findReviews({ limit: 12 })
   const booking = s.bookingLink || '/contact'
   const stats = home.stats?.length ? home.stats : []
   return (
@@ -195,18 +202,17 @@ export default async function Home() {
       {quotes.docs.length > 0 && (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">
-            <div className="center" style={{ marginBottom: 40 }}>
-              <p className="eyebrow">Families say</p>
-              <h2>Less panic. More <Hl color="#FF6B4A">plan</Hl>.</h2>
+            <div className="split" style={{ marginBottom: 28, alignItems: 'end' }}>
+              <div>
+                <p className="eyebrow">Families say</p>
+                <h2 style={{ margin: 0 }}>Less panic. More <Hl color="#FF6B4A">plan</Hl>.</h2>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                {sum.avg && <div className="rating-inline"><b>{sum.avg.toFixed(1)}</b> <Stars n={sum.avg} size={20} /> <span className="muted">from {sum.rated} reviews</span></div>}
+                <Link href="/reviews" className="more" style={{ fontWeight: 700, color: 'var(--coral-d)' }}>All reviews →</Link>
+              </div>
             </div>
-            <div className="grid g3">
-              {quotes.docs.map((q) => (
-                <blockquote className="quote" key={q.id} style={{ margin: 0 }}>
-                  <p>{q.quote}</p>
-                  <footer><b>{q.name}</b>{q.detail}</footer>
-                </blockquote>
-              ))}
-            </div>
+            <Carousel label="Client reviews">{quotes.docs.map((r) => <ReviewCard key={r.id} r={r} />)}</Carousel>
           </div>
         </section>
       )}
@@ -216,18 +222,9 @@ export default async function Home() {
           <div className="wrap">
             <div className="split" style={{ marginBottom: 32 }}>
               <h2 style={{ margin: 0 }}>Straight answers, no jargon</h2>
-              <p className="muted" style={{ margin: 0 }}>Guides and myth-busters for parents and students. <Link href="/resources">All resources →</Link></p>
+              <p className="muted" style={{ margin: 0 }}>New articles every week for parents and students. <Link href="/blog">Visit the blog →</Link></p>
             </div>
-            <div className="grid g3">
-              {posts.docs.map((p, i) => (
-                <Link href={`/resources/${p.slug}`} className="card" key={p.id}>
-                  <span className={`badge ${['soft', 'mint', 'coral'][i % 3]}`} style={{ alignSelf: 'flex-start' }}>{p.category}</span>
-                  <h3 style={{ marginTop: 10 }}>{p.title}</h3>
-                  <p>{p.excerpt}</p>
-                  <span className="more">Read →</span>
-                </Link>
-              ))}
-            </div>
+            <div className="grid g3">{posts.docs.map((p) => <PostCard key={p.id} p={p} />)}</div>
           </div>
         </section>
       )}

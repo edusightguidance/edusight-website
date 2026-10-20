@@ -112,6 +112,13 @@ export default async function Portal({ searchParams }: { searchParams: Promise<{
           </div>
         </div>
 
+        {orders.length > 0 && (
+          <div className="panel panel-butter split" style={{ marginBottom: 22, padding: 28 }}>
+            <div><h2 style={{ fontSize: '1.5rem', margin: 0 }}>How was your experience?</h2><p className="muted" style={{ margin: '6px 0 0' }}>A short review helps other families — and you’ll get a ✓ Verified client badge.</p></div>
+            <div className="btns" style={{ justifyContent: 'flex-end' }}><Link href="/reviews#write" className="btn btn-primary">Leave a review</Link></div>
+          </div>
+        )}
+
         {products.docs.some((p) => !owned.has(p.id)) && (
           <div className="auth-card">
             <h2 style={{ fontSize: '1.5rem' }}>Add more</h2>

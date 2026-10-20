@@ -10,7 +10,7 @@ const LINKS = [
   ['/career-explorer', 'Career Explorer'],
   ['/careers', 'Careers'],
   ['/books', 'Books'],
-  ['/resources', 'Resources'],
+  ['/blog', 'Blog'],
   ['/about', 'About'],
 ]
 

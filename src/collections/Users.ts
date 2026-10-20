@@ -107,6 +107,7 @@ export const Users: CollectionConfig = {
     { name: 'subjects', type: 'textarea' },
     { name: 'hobbies', type: 'textarea' },
     { name: 'dream', type: 'textarea', label: 'Dream / aspiration' },
+    { name: 'reviewRequestedAt', type: 'date', admin: { readOnly: true, description: 'When we emailed them asking for a review' } },
     { name: 'shortlist', type: 'relationship', relationTo: 'careers', hasMany: true, label: 'Career shortlist' },
     {
       type: 'collapsible',

@@ -38,7 +38,13 @@ export async function Welcome({ payload, user }: Props) {
           </>
         )}
         <a href="/admin/globals/homepage" style={card}><b>Edit homepage</b><div style={{ opacity: 0.7 }}>Headline, stats, method</div></a>
-        <a href="/admin/collections/posts/create" style={card}><b>Write an article</b><div style={{ opacity: 0.7 }}>Guides, myths, events</div></a>
+        <a href="/admin/collections/posts/create" style={card}><b>Write a blog post</b><div style={{ opacity: 0.7 }}>Save draft, preview, publish or schedule</div></a>
+        {isSuper && (
+          <a href="/admin/collections/testimonials?where[status][equals]=pending" style={card}><b>Reviews to approve</b><div style={{ opacity: 0.7 }}>New reviews from the website</div></a>
+        )}
+        {isSuper && (
+          <a href="/x/import-blog" target="_blank" style={card}><b>Import old blog posts</b><div style={{ opacity: 0.7 }}>Copies posts from the old Squarespace site (safe to repeat)</div></a>
+        )}
         <a href="/" target="_blank" style={card}><b>View website ↗</b><div style={{ opacity: 0.7 }}>Opens in a new tab</div></a>
       </div>
     </div>

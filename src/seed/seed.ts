@@ -190,12 +190,12 @@ export async function seedAll(payload: Payload) {
 
   const posts = [
     {
-      title: '10 myths about university requirements', category: 'myth',
+      title: '10 myths about university requirements', category: 'myth-busters',
       excerpt: '“Only top grades matter.” “IB is always preferred.” We unpack the beliefs that lead families to the wrong choices.',
       body: rt(`Every year we meet families making big decisions based on things they have heard at the school gate. Here are the myths we hear most often — and what is actually true.\n\n## The myths\n\n- IB is always preferred by universities\n- International boards are not eligible for Indian entrance exams\n- British and IB are easier than national boards\n- Commerce is mandatory for accounting qualifications\n- Only high grades are required\n- Only top universities provide a good education\n- Getting into a top university guarantees success in life\n- All universities and courses have the same entry requirements\n- Top-ranked universities are good at every course\n- You should do a Master’s immediately after your Bachelor’s\n\n## What to do instead\n\nStart from the student: strengths, interests, values and wellbeing. Then match subjects, countries and universities to that profile. If you want a second opinion on your plan, book a call.`),
     },
     {
-      title: 'How to start preparing for university admissions', category: 'guide',
+      title: 'How to start preparing for university admissions', category: 'guides',
       excerpt: 'A practical checklist from research to visas — and what to do in Grades 9, 10 and 11 so Grade 12 is not a panic.',
       body: rt(`Strong applications are built over years, not weeks. Use this checklist to stay ahead.\n\n## Research and requirements\n\n- Research universities and programmes in each target country\n- Note minimum grades, prerequisite subjects and extra documents\n- Track deadlines and standardised test dates\n- Choose your major and minor\n\n## Build the application\n\n- Keep a strong academic record across the last four years\n- Take part in extracurriculars and extra courses that show real interest\n- Prepare for tests, group discussions and interviews\n- Build relationships with teachers for strong recommendations\n- Draft a personal statement and tailor it to each application\n\n## Money and logistics\n\n- Research scholarships and eligibility\n- Plan the full cost: tuition, accommodation and living expenses\n- Visit campuses or attend admission events\n- Prepare visa documents early\n- Check email regularly and respond promptly to universities`),
     },
@@ -205,7 +205,11 @@ export async function seedAll(payload: Payload) {
       body: rt(`Career guidance is not a one-off conversation in Grade 12. Done well, it starts early and grows with the student.\n\n## What good guidance gives a student\n\n- Early exploration and awareness of what is out there\n- An honest view of strengths and areas to develop\n- Academic planning that keeps options open\n- Skill development and real-world exposure\n- Freedom from myths and career stereotypes\n- Support through stressful moments\n- Preparation for university and beyond`),
     },
   ]
-  for (const p of posts) await upsert(payload, 'posts', { title: { equals: p.title } }, p)
+  const CATS: [string, string][] = [['Guides', 'guides'], ['Myth busters', 'myth-busters'], ['Parenting', 'parenting'], ['Careers', 'careers'], ['Universities', 'universities'], ['Curriculum', 'curriculum'], ['Well-being', 'well-being'], ['Events & webinars', 'events'], ['News', 'news']]
+  const catId: Record<string, number> = {}
+  for (const [i, [title, slug]] of CATS.entries()) catId[slug] = (await upsert(payload, 'categories', { slug: { equals: slug } }, { title, slug, order: i + 1 })).id
+  for (const { category, ...p } of posts)
+    await upsert(payload, 'posts', { title: { equals: p.title } }, { ...p, categories: [catId[category]], _status: 'published' })
   log('posts')
 
   await upsert(payload, 'pages', { slug: { equals: 'privacy-policy' } }, {

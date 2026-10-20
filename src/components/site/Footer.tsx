@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Mark } from './Icon'
+import { SocialLinks } from './Social'
 import { waLink } from '@/lib/data'
 
 type S = {
@@ -12,7 +13,6 @@ type S = {
 }
 
 export function Footer({ s }: { s: S }) {
-  const socials = Object.entries(s.socials || {}).filter(([k, v]) => v && k !== 'id') as [string, string][]
   return (
     <footer className="footer">
       <div className="wrap">
@@ -39,7 +39,8 @@ export function Footer({ s }: { s: S }) {
             <h4>EDUSIGHT</h4>
             <ul>
               <li><Link href="/about">About Bhavana</Link></li>
-              <li><Link href="/resources">Resources</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
+              <li><Link href="/reviews">Reviews</Link></li>
               <li><Link href="/contact">Contact</Link></li>
               <li><Link href="/portal">Student portal</Link></li>
               <li><Link href="/p/privacy-policy">Privacy policy</Link></li>
@@ -51,10 +52,8 @@ export function Footer({ s }: { s: S }) {
               <li><a href={waLink(s.whatsapp)}>WhatsApp {s.phone}</a></li>
               <li><a href={`mailto:${s.email}`}>{s.email}</a></li>
               <li>{s.address}</li>
-              {socials.map(([k, v]) => (
-                <li key={k}><a href={v} target="_blank" rel="noreferrer" style={{ textTransform: 'capitalize' }}>{k}</a></li>
-              ))}
             </ul>
+            <SocialLinks socials={s.socials} size={22} className="socials socials-dark" />
           </div>
         </div>
         <div className="footer-bottom">

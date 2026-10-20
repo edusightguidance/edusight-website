@@ -67,10 +67,12 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    posts: Post;
+    categories: Category;
+    tags: Tag;
+    testimonials: Testimonial;
     services: Service;
     careers: Career;
-    posts: Post;
-    testimonials: Testimonial;
     pages: Page;
     media: Media;
     books: Book;
@@ -88,10 +90,12 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     careers: CareersSelect<false> | CareersSelect<true>;
-    posts: PostsSelect<false> | PostsSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
@@ -148,6 +152,151 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * Write, then click "Publish changes". To schedule a post, set "Publish date" in the future: it appears automatically on that date. Use "Preview" to see it before publishing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * One or two sentences shown on blog cards and in Google.
+   */
+  excerpt: string;
+  image?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Future date = scheduled
+   */
+  publishedAt: string;
+  categories?: (number | Category)[] | null;
+  tags?: (number | Tag)[] | null;
+  author?: string | null;
+  featured?: boolean | null;
+  readingMinutes?: number | null;
+  /**
+   * Old web addresses that should redirect here
+   */
+  legacySlugs?: string[] | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  description?: string | null;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  title: string;
+  /**
+   * Web address, e.g. "university-admissions"
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Add reviews from LinkedIn, Facebook, Instagram or Google, and approve reviews left on the website. Only "Approved" reviews are shown.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  status: 'pending' | 'approved' | 'rejected';
+  source: 'website' | 'google' | 'linkedin' | 'facebook' | 'instagram' | 'other';
+  /**
+   * 1–5 stars (optional)
+   */
+  rating?: number | null;
+  quote: string;
+  /**
+   * For under-18 students use first name + initial, e.g. "Aisha K."
+   */
+  name: string;
+  /**
+   * e.g. Parent of Grade 11 student, Dubai
+   */
+  detail?: string | null;
+  date?: string | null;
+  service?: (number | null) | Service;
+  sourceUrl?: string | null;
+  screenshot?: (number | null) | Media;
+  featured?: boolean | null;
+  verified?: boolean | null;
+  email?: string | null;
+  user?: (number | null) | User;
+  consent?: boolean | null;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -224,22 +373,52 @@ export interface Service {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "users".
  */
-export interface Media {
+export interface User {
   id: number;
-  alt?: string | null;
+  name: string;
+  role: 'superadmin' | 'editor' | 'student' | 'parent' | 'teacher';
+  phone?: string | null;
+  dateOfBirth?: string | null;
+  grade?: string | null;
+  school?: string | null;
+  /**
+   * e.g. IB, A-Level, CBSE, American
+   */
+  curriculum?: string | null;
+  subjects?: string | null;
+  hobbies?: string | null;
+  dream?: string | null;
+  /**
+   * When we emailed them asking for a review
+   */
+  reviewRequestedAt?: string | null;
+  shortlist?: (number | Career)[] | null;
+  parentName?: string | null;
+  parentEmail?: string | null;
+  consentStatus?: ('not_required' | 'pending' | 'granted') | null;
+  consentAt?: string | null;
+  consentToken?: string | null;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -268,70 +447,6 @@ export interface Career {
    * Untick to hide from the website
    */
   published?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: number;
-  title: string;
-  category?: ('guide' | 'myth' | 'parenting' | 'event' | 'news') | null;
-  excerpt: string;
-  image?: (number | null) | Media;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  publishedAt?: string | null;
-  /**
-   * Web address, e.g. "university-admissions"
-   */
-  slug: string;
-  /**
-   * Untick to hide from the website
-   */
-  published?: boolean | null;
-  seo?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  quote: string;
-  name: string;
-  /**
-   * e.g. Parent of Grade 11 student, Dubai
-   */
-  detail?: string | null;
-  /**
-   * Untick to hide from the website
-   */
-  published?: boolean | null;
-  /**
-   * Lower numbers show first
-   */
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -440,51 +555,6 @@ export interface PrivateFile {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name: string;
-  role: 'superadmin' | 'editor' | 'student' | 'parent' | 'teacher';
-  phone?: string | null;
-  dateOfBirth?: string | null;
-  grade?: string | null;
-  school?: string | null;
-  /**
-   * e.g. IB, A-Level, CBSE, American
-   */
-  curriculum?: string | null;
-  subjects?: string | null;
-  hobbies?: string | null;
-  dream?: string | null;
-  shortlist?: (number | Career)[] | null;
-  parentName?: string | null;
-  parentEmail?: string | null;
-  consentStatus?: ('not_required' | 'pending' | 'granted') | null;
-  consentAt?: string | null;
-  consentToken?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * Anything a student or school can buy. It appears in their portal after payment.
@@ -655,20 +725,28 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: number | Tag;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
         relationTo: 'services';
         value: number | Service;
       } | null)
     | ({
         relationTo: 'careers';
         value: number | Career;
-      } | null)
-    | ({
-        relationTo: 'posts';
-        value: number | Post;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
       } | null)
     | ({
         relationTo: 'pages';
@@ -754,6 +832,79 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  image?: T;
+  body?: T;
+  publishedAt?: T;
+  categories?: T;
+  tags?: T;
+  author?: T;
+  featured?: T;
+  readingMinutes?: T;
+  legacySlugs?: T;
+  slug?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  slug?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  status?: T;
+  source?: T;
+  rating?: T;
+  quote?: T;
+  name?: T;
+  detail?: T;
+  date?: T;
+  service?: T;
+  sourceUrl?: T;
+  screenshot?: T;
+  featured?: T;
+  verified?: T;
+  email?: T;
+  user?: T;
+  consent?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
@@ -801,41 +952,6 @@ export interface CareersSelect<T extends boolean = true> {
   outlook?: T;
   slug?: T;
   published?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts_select".
- */
-export interface PostsSelect<T extends boolean = true> {
-  title?: T;
-  category?: T;
-  excerpt?: T;
-  image?: T;
-  body?: T;
-  publishedAt?: T;
-  slug?: T;
-  published?: T;
-  seo?:
-    | T
-    | {
-        metaTitle?: T;
-        metaDescription?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials_select".
- */
-export interface TestimonialsSelect<T extends boolean = true> {
-  quote?: T;
-  name?: T;
-  detail?: T;
-  published?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1026,6 +1142,7 @@ export interface UsersSelect<T extends boolean = true> {
   subjects?: T;
   hobbies?: T;
   dream?: T;
+  reviewRequestedAt?: T;
   shortlist?: T;
   parentName?: T;
   parentEmail?: T;
@@ -1193,6 +1310,10 @@ export interface SiteSetting {
     youtube?: string | null;
   };
   /**
+   * Your Google Business "Write a review" link. Shows a "Review us on Google" button when filled.
+   */
+  googleReviewLink?: string | null;
+  /**
    * Where "Book a consultation" goes (Calendly, WhatsApp, etc.). Empty = contact page.
    */
   bookingLink?: string | null;
@@ -1278,6 +1399,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         linkedin?: T;
         youtube?: T;
       };
+  googleReviewLink?: T;
   bookingLink?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -1,6 +1,7 @@
 import { getSettings, waLink } from '@/lib/data'
 import { Hl, Icon } from '@/components/site/Icon'
 import { ContactForm } from './ContactForm'
+import { SocialLinks } from '@/components/site/Social'
 
 export const metadata = { title: 'Contact', description: 'Book a consultation with Bhavana Sood, EDUSIGHT — career and university guidance in Dubai.' }
 
@@ -28,6 +29,8 @@ export default async function Contact({ searchParams }: { searchParams: Promise<
               <span className="grow"><b>Where</b><br /><span className="muted">{s.address} · in person and online worldwide</span></span>
             </div>
           </div>
+          <p style={{ marginTop: 24, fontWeight: 700 }}>Follow EDUSIGHT</p>
+          <SocialLinks socials={s.socials} size={22} />
         </div>
         <div className="auth-card"><ContactForm topic={topic} /></div>
       </div>

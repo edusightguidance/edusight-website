@@ -1,5 +1,35 @@
-import type { CollectionConfig, Field } from 'payload'
-import { publishedOrStaff, staffOnly } from '../access'
+import type { Access, CollectionConfig, Field, Where } from 'payload'
+import { BlocksFeature, FixedToolbarFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import { isStaff, publishedOrStaff, staffOnly, superOnly } from '../access'
+import { refreshSite } from '../lib/revalidate'
+
+const refresh = { afterChange: [refreshSite], afterDelete: [refreshSite] }
+
+/** Rich text with a fixed toolbar plus YouTube and callout blocks. */
+export const articleEditor = lexicalEditor({
+  features: ({ defaultFeatures }) => [
+    ...defaultFeatures,
+    FixedToolbarFeature(),
+    BlocksFeature({
+      blocks: [
+        {
+          slug: 'youtube',
+          labels: { singular: 'YouTube video', plural: 'YouTube videos' },
+          fields: [{ name: 'url', type: 'text', required: true, admin: { description: 'Paste the YouTube link' } }],
+        },
+        {
+          slug: 'callout',
+          labels: { singular: 'Callout box', plural: 'Callout boxes' },
+          fields: [
+            { name: 'style', type: 'select', defaultValue: 'tip', options: [{ label: 'Tip', value: 'tip' }, { label: 'Important', value: 'warn' }, { label: 'Did you know?', value: 'info' }] },
+            { name: 'title', type: 'text' },
+            { name: 'text', type: 'textarea', required: true },
+          ],
+        },
+      ],
+    }),
+  ],
+})
 
 const slugField: Field = {
   name: 'slug',
@@ -45,6 +75,7 @@ const contentAccess = { read: publishedOrStaff, create: staffOnly, update: staff
 
 export const Services: CollectionConfig = {
   slug: 'services',
+  hooks: refresh,
   labels: { singular: 'Service', plural: 'Services & Specializations' },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'kind', 'published', 'order'], group: 'Website content' },
   access: contentAccess,
@@ -95,6 +126,7 @@ export const Services: CollectionConfig = {
 
 export const Careers: CollectionConfig = {
   slug: 'careers',
+  hooks: refresh,
   labels: { singular: 'Career', plural: 'Career Library' },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'stream', 'riasec', 'published'], group: 'Website content' },
   access: contentAccess,
@@ -151,6 +183,7 @@ export const Careers: CollectionConfig = {
 
 export const Books: CollectionConfig = {
   slug: 'books',
+  hooks: refresh,
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'format', 'price', 'published'], group: 'Shop' },
   access: contentAccess,
   defaultSort: 'order',
@@ -191,38 +224,95 @@ export const Books: CollectionConfig = {
   ],
 }
 
+/** Public sees only published articles whose publish date has arrived (future date = scheduled). */
+export const livePosts = (): Where => ({
+  and: [{ _status: { equals: 'published' } }, { publishedAt: { less_than_equal: new Date().toISOString() } }],
+})
+const postRead: Access = ({ req }) => (isStaff(req.user as never) ? true : livePosts())
+
+const words = (node: unknown): number => {
+  if (!node || typeof node !== 'object') return 0
+  const n = node as { text?: string; children?: unknown[]; root?: unknown }
+  if (n.root) return words(n.root)
+  return (n.text ? n.text.split(/\s+/).filter(Boolean).length : 0) + (n.children || []).reduce((a: number, c) => a + words(c), 0)
+}
+
+export const Categories: CollectionConfig = {
+  slug: 'categories',
+  labels: { singular: 'Blog category', plural: 'Blog categories' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'slug', 'order'], group: 'Blog' },
+  access: { read: () => true, create: staffOnly, update: staffOnly, delete: staffOnly },
+  defaultSort: 'order',
+  hooks: refresh,
+  fields: [{ name: 'title', type: 'text', required: true }, { name: 'description', type: 'textarea' }, slugField, order],
+}
+
+export const Tags: CollectionConfig = {
+  slug: 'tags',
+  labels: { singular: 'Tag', plural: 'Tags' },
+  admin: { useAsTitle: 'title', group: 'Blog' },
+  access: { read: () => true, create: staffOnly, update: staffOnly, delete: staffOnly },
+  defaultSort: 'title',
+  hooks: refresh,
+  fields: [{ name: 'title', type: 'text', required: true }, slugField],
+}
+
 export const Posts: CollectionConfig = {
   slug: 'posts',
-  labels: { singular: 'Article', plural: 'Articles & Resources' },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'category', 'publishedAt', 'published'], group: 'Website content' },
-  access: contentAccess,
+  labels: { singular: 'Blog post', plural: 'Blog posts' },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'categories', 'publishedAt', '_status'],
+    group: 'Blog',
+    description:
+      'Write, then click "Publish changes". To schedule a post, set "Publish date" in the future: it appears automatically on that date. Use "Preview" to see it before publishing.',
+    preview: (doc) => `${process.env.NEXT_PUBLIC_SITE_URL || ''}/x/preview?slug=${doc?.slug || ''}`,
+  },
+  versions: { drafts: { autosave: { interval: 2000 } }, maxPerDoc: 25 },
+  access: { read: postRead, create: staffOnly, update: staffOnly, delete: staffOnly, readVersions: staffOnly },
   defaultSort: '-publishedAt',
+  hooks: {
+    ...refresh,
+    beforeChange: [
+      ({ data }) => {
+        data.readingMinutes = Math.max(1, Math.round(words(data.body) / 220))
+        return data
+      },
+    ],
+  },
   fields: [
     { name: 'title', type: 'text', required: true },
+    { name: 'excerpt', type: 'textarea', required: true, admin: { description: 'One or two sentences shown on blog cards and in Google.' } },
+    { name: 'image', type: 'upload', relationTo: 'media', label: 'Cover image' },
+    { name: 'body', type: 'richText', editor: articleEditor },
     {
-      name: 'category',
-      type: 'select',
-      defaultValue: 'guide',
-      options: [
-        { label: 'Guide', value: 'guide' },
-        { label: 'Myth buster', value: 'myth' },
-        { label: 'Parenting', value: 'parenting' },
-        { label: 'Event / webinar', value: 'event' },
-        { label: 'News', value: 'news' },
-      ],
+      name: 'publishedAt',
+      type: 'date',
+      label: 'Publish date',
+      required: true,
+      defaultValue: () => new Date().toISOString(),
+      admin: { position: 'sidebar', date: { pickerAppearance: 'dayAndTime' }, description: 'Future date = scheduled' },
     },
-    { name: 'excerpt', type: 'textarea', required: true },
-    { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'body', type: 'richText' },
-    { name: 'publishedAt', type: 'date', defaultValue: () => new Date().toISOString(), admin: { position: 'sidebar' } },
+    { name: 'categories', type: 'relationship', relationTo: 'categories', hasMany: true, admin: { position: 'sidebar' } },
+    { name: 'tags', type: 'relationship', relationTo: 'tags', hasMany: true, admin: { position: 'sidebar' } },
+    { name: 'author', type: 'text', defaultValue: 'Bhavana Sood', admin: { position: 'sidebar' } },
+    { name: 'featured', type: 'checkbox', label: 'Feature at top of blog', admin: { position: 'sidebar' } },
+    { name: 'readingMinutes', type: 'number', admin: { readOnly: true, position: 'sidebar' } },
+    {
+      name: 'legacySlugs',
+      label: 'Old web addresses',
+      type: 'text',
+      hasMany: true,
+      admin: { position: 'sidebar', description: 'Old web addresses that should redirect here' },
+    },
     slugField,
-    published,
     seo,
   ],
 }
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  hooks: refresh,
   labels: { singular: 'Page', plural: 'Extra pages' },
   admin: {
     useAsTitle: 'title',
@@ -233,16 +323,75 @@ export const Pages: CollectionConfig = {
   fields: [{ name: 'title', type: 'text', required: true }, { name: 'body', type: 'richText' }, slugField, published, seo],
 }
 
+const reviewRead: Access = ({ req }) => (isStaff(req.user as never) ? true : { status: { equals: 'approved' } })
+const staffFieldRead = ({ req }: { req: { user: unknown } }) => isStaff(req.user as never)
+
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
-  admin: { useAsTitle: 'name', group: 'Website content' },
-  access: contentAccess,
-  defaultSort: 'order',
+  labels: { singular: 'Review', plural: 'Reviews' },
+  admin: {
+    useAsTitle: 'name',
+    defaultColumns: ['name', 'source', 'rating', 'status', 'date'],
+    group: 'Reviews',
+    description: 'Add reviews from LinkedIn, Facebook, Instagram or Google, and approve reviews left on the website. Only "Approved" reviews are shown.',
+  },
+  access: { read: reviewRead, create: staffOnly, update: staffOnly, delete: superOnly },
+  defaultSort: '-date',
+  hooks: refresh,
   fields: [
-    { name: 'quote', type: 'textarea', required: true },
-    { name: 'name', type: 'text', required: true },
-    { name: 'detail', type: 'text', admin: { description: 'e.g. Parent of Grade 11 student, Dubai' } },
-    published,
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'status',
+          type: 'select',
+          defaultValue: 'approved',
+          required: true,
+          options: [
+            { label: 'Pending – needs your approval', value: 'pending' },
+            { label: 'Approved – shown on website', value: 'approved' },
+            { label: 'Hidden', value: 'rejected' },
+          ],
+        },
+        {
+          name: 'source',
+          type: 'select',
+          defaultValue: 'website',
+          required: true,
+          options: [
+            { label: 'This website', value: 'website' },
+            { label: 'Google', value: 'google' },
+            { label: 'LinkedIn', value: 'linkedin' },
+            { label: 'Facebook', value: 'facebook' },
+            { label: 'Instagram', value: 'instagram' },
+            { label: 'Other', value: 'other' },
+          ],
+        },
+        { name: 'rating', type: 'number', min: 1, max: 5, admin: { description: '1–5 stars (optional)' } },
+      ],
+    },
+    { name: 'quote', type: 'textarea', required: true, label: 'Review text' },
+    {
+      type: 'row',
+      fields: [
+        { name: 'name', type: 'text', required: true, admin: { description: 'For under-18 students use first name + initial, e.g. "Aisha K."' } },
+        { name: 'detail', type: 'text', label: 'Who they are', admin: { description: 'e.g. Parent of Grade 11 student, Dubai' } },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        { name: 'date', type: 'date', defaultValue: () => new Date().toISOString(), admin: { date: { pickerAppearance: 'dayOnly' } } },
+        { name: 'service', type: 'relationship', relationTo: 'services', label: 'Related service' },
+      ],
+    },
+    { name: 'sourceUrl', type: 'text', label: 'Link to the original post (optional)' },
+    { name: 'screenshot', type: 'upload', relationTo: 'media', label: 'Screenshot (optional)' },
+    { name: 'featured', type: 'checkbox', label: 'Show on homepage', admin: { position: 'sidebar' } },
+    { name: 'verified', type: 'checkbox', label: 'Verified client', admin: { position: 'sidebar' } },
+    { name: 'email', type: 'email', admin: { position: 'sidebar' }, access: { read: staffFieldRead } },
+    { name: 'user', type: 'relationship', relationTo: 'users', admin: { position: 'sidebar', readOnly: true }, access: { read: staffFieldRead } },
+    { name: 'consent', type: 'checkbox', label: 'Permission to publish', defaultValue: true, admin: { position: 'sidebar' } },
     order,
   ],
 }

@@ -4,6 +4,8 @@ import { db, getSettings } from '@/lib/data'
 import { Icon } from '@/components/site/Icon'
 import { PageHero } from '@/components/site/PageHero'
 import { Rich } from '@/components/site/Rich'
+import { findReviews } from '@/lib/reviews'
+import { ReviewCard } from '@/components/site/ReviewCard'
 
 export const revalidate = 60
 
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Service({ params }: { params: Promise<{ slug: string }> }) {
   const s = await get((await params).slug)
   if (!s) notFound()
-  const settings = await getSettings()
+  const [settings, reviews] = await Promise.all([getSettings(), findReviews({ serviceId: s.id, limit: 3 })])
   return (
     <>
       <PageHero crumbs={[['/services', 'Services']]} eyebrow={s.kind === 'specialization' ? 'Career specialization' : s.tagline || 'Service'} title={s.title} lead={s.summary}>
@@ -58,6 +60,15 @@ export default async function Service({ params }: { params: Promise<{ slug: stri
           </aside>
         </div>
       </section>
+      {reviews.docs.length > 0 && (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <h2 style={{ fontSize: '1.9rem' }}>What families say</h2>
+            <div className="review-grid">{reviews.docs.map((r) => <ReviewCard key={r.id} r={r} />)}</div>
+            <Link href={`/reviews?service=${s.id}`} className="more" style={{ display: 'inline-block', marginTop: 16, fontWeight: 700, color: 'var(--coral-d)' }}>More reviews →</Link>
+          </div>
+        </section>
+      )}
     </>
   )
 }

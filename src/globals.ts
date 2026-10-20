@@ -1,8 +1,12 @@
 import type { GlobalConfig } from 'payload'
 import { isSuper, staffOnly, superOnly } from './access'
+import { refreshSite } from './lib/revalidate'
+
+const hooks = { afterChange: [refreshSite] }
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
+  hooks,
   label: 'Site settings',
   admin: { group: 'Settings', hidden: ({ user }) => !isSuper(user as never) },
   access: { read: () => true, update: superOnly },
@@ -23,18 +27,20 @@ export const SiteSettings: GlobalConfig = {
       name: 'socials',
       type: 'group',
       fields: [
-        { name: 'instagram', type: 'text' },
-        { name: 'facebook', type: 'text' },
+        { name: 'instagram', type: 'text', defaultValue: 'https://www.instagram.com/edu.sight/' },
+        { name: 'facebook', type: 'text', defaultValue: 'https://www.facebook.com/EduSightAE/' },
         { name: 'linkedin', type: 'text', defaultValue: 'https://www.linkedin.com/in/bhavanasood/' },
         { name: 'youtube', type: 'text' },
       ],
     },
+    { name: 'googleReviewLink', type: 'text', admin: { description: 'Your Google Business "Write a review" link. Shows a "Review us on Google" button when filled.' } },
     { name: 'bookingLink', type: 'text', admin: { description: 'Where "Book a consultation" goes (Calendly, WhatsApp, etc.). Empty = contact page.' } },
   ],
 }
 
 export const Homepage: GlobalConfig = {
   slug: 'homepage',
+  hooks,
   label: 'Homepage',
   admin: { group: 'Website content' },
   access: { read: () => true, update: staffOnly },
@@ -74,6 +80,7 @@ export const Homepage: GlobalConfig = {
 
 export const About: GlobalConfig = {
   slug: 'about',
+  hooks,
   label: 'About Bhavana',
   admin: { group: 'Website content' },
   access: { read: () => true, update: staffOnly },
