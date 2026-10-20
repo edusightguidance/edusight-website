@@ -73,6 +73,7 @@ export interface Config {
     testimonials: Testimonial;
     services: Service;
     careers: Career;
+    awards: Award;
     pages: Page;
     media: Media;
     books: Book;
@@ -96,6 +97,7 @@ export interface Config {
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     careers: CareersSelect<false> | CareersSelect<true>;
+    awards: AwardsSelect<false> | AwardsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
@@ -451,6 +453,30 @@ export interface Career {
   createdAt: string;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards".
+ */
+export interface Award {
+  id: number;
+  title: string;
+  organisation?: string | null;
+  year?: string | null;
+  kind?: ('award' | 'speaking' | 'recognition') | null;
+  image?: (number | null) | Media;
+  gallery?: (number | Media)[] | null;
+  note?: string | null;
+  /**
+   * Untick to hide from the website
+   */
+  published?: boolean | null;
+  /**
+   * Lower numbers show first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Simple pages such as Privacy Policy or Terms. They appear at /p/your-slug
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -749,6 +775,10 @@ export interface PayloadLockedDocument {
         value: number | Career;
       } | null)
     | ({
+        relationTo: 'awards';
+        value: number | Award;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -952,6 +982,23 @@ export interface CareersSelect<T extends boolean = true> {
   outlook?: T;
   slug?: T;
   published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards_select".
+ */
+export interface AwardsSelect<T extends boolean = true> {
+  title?: T;
+  organisation?: T;
+  year?: T;
+  kind?: T;
+  image?: T;
+  gallery?: T;
+  note?: T;
+  published?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1274,13 +1321,6 @@ export interface About {
         id?: string | null;
       }[]
     | null;
-  awards?:
-    | {
-        title: string;
-        year?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1366,13 +1406,6 @@ export interface AboutSelect<T extends boolean = true> {
     | {
         title?: T;
         text?: T;
-        id?: T;
-      };
-  awards?:
-    | T
-    | {
-        title?: T;
-        year?: T;
         id?: T;
       };
   updatedAt?: T;

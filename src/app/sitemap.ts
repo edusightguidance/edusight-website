@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     all('pages', { published: { equals: true } }),
   ])
   const base = SITE()
-  const fixed = ['', '/services', '/assessments', '/career-explorer', '/careers', '/books', '/blog', '/reviews', '/about', '/contact']
+  const fixed = ['', '/services', '/assessments', '/career-explorer', '/careers', '/books', '/blog', '/reviews', '/about', '/awards', '/contact']
   const map = (prefix: string, docs: { slug: string; updatedAt: string }[]) => docs.map((d) => ({ url: `${base}${prefix}/${d.slug}`, lastModified: d.updatedAt }))
   return [
     ...fixed.map((p) => ({ url: `${base}${p}` })),

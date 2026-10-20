@@ -92,7 +92,6 @@ export const About: GlobalConfig = {
     { name: 'story', type: 'textarea' },
     { name: 'approach', type: 'textarea' },
     { name: 'expertise', type: 'array', fields: [{ name: 'title', type: 'text', required: true }, { name: 'text', type: 'textarea' }] },
-    { name: 'awards', type: 'array', fields: [{ name: 'title', type: 'text', required: true }, { name: 'year', type: 'text' }] },
   ],
 }
 

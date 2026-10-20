@@ -244,18 +244,12 @@ export async function seedAll(payload: Payload) {
         { title: 'Career counselling', text: 'Comprehensive career assessments and aptitude testing; career planning, university selection and job-market navigation for students and professionals.' },
         { title: 'Mental health counselling', text: 'Stress, anxiety and well-being in academic and career transitions; seminars on work-life balance and resilience.' },
       ],
-      awards: [
-        { title: 'Recognition Award for building awareness around future skills development of youth — Resolute Education' },
-        { title: 'WOW Patron — Spread Smiles', year: '2023' },
-        { title: 'Guest Speaker, TKAA Talent X', year: '2023' },
-        { title: 'Wonder Woman Award — She Inspires', year: '2022' },
-        { title: 'Tally MSME E-preneur Icon Award — Tally Solutions', year: '2022' },
-        { title: 'Entrepreneur — Dramatism', year: '2022' },
-        { title: 'Women Got Talent', year: '2022' },
-        { title: 'Guest Speaker, International Innovative Future Education Summit, Dubai', year: '2022' },
-        { title: 'Super Mompreneur', year: '2022' },
-      ],
     },
   })
+
+  for (const [i, [t, y]] of ([['Recognition Award for building awareness around future skills development of youth — Resolute Education', ''], ['WOW Patron — Spread Smiles', '2023'], ['Guest Speaker, TKAA Talent X', '2023'], ['Wonder Woman Award — She Inspires', '2022'], ['Tally MSME E-preneur Icon Award — Tally Solutions', '2022'], ['Entrepreneur — Dramatism', '2022'], ['Women Got Talent', '2022'], ['Guest Speaker, International Innovative Future Education Summit, Dubai', '2022'], ['Super Mompreneur', '2022']] as [string, string][]).entries()) {
+    const [title, organisation] = t.split(' — ')
+    await upsert(payload, 'awards', { title: { equals: title } }, { title, organisation, year: y || undefined, kind: /speaker/i.test(t) ? 'speaking' : 'award', order: i + 1 })
+  }
   log('globals')
 }

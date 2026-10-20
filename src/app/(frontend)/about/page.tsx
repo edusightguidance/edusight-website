@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { db } from '@/lib/data'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
+import { getAwards } from '@/lib/awards'
+import { AwardsGrid } from '@/components/site/Awards'
 
 export const revalidate = 60
 export const metadata = { title: 'About Bhavana Sood', description: 'Counselling psychologist and career advisor with 12+ years of experience in curriculum pathways, career guidance and mental health counselling.' }
 
 export default async function About() {
-  const a = await (await db()).findGlobal({ slug: 'about', depth: 1 })
+  const [a, awards] = await Promise.all([(await db()).findGlobal({ slug: 'about', depth: 1 }), getAwards({ limit: 6 })])
   const photo = a.photo && typeof a.photo === 'object' ? a.photo : null
   return (
     <>
@@ -55,20 +57,18 @@ export default async function About() {
           </div>
         </div>
       </section>
-      {(a.awards || []).length > 0 && (
+      {awards.length > 0 && (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <div className="panel panel-ink">
-              <p className="eyebrow" style={{ color: 'var(--marigold)' }}>Recognition</p>
-              <h2>Awards & speaking</h2>
-              <div className="grid g2" style={{ marginTop: 24, gap: 14 }}>
-                {a.awards!.map((w) => (
-                  <div key={w.id} style={{ display: 'flex', gap: 14, alignItems: 'baseline', borderBottom: '1px solid rgba(255,255,255,.14)', paddingBottom: 12 }}>
-                    <b style={{ color: 'var(--marigold)', minWidth: 44 }}>{w.year || '★'}</b>
-                    <span style={{ color: '#fff' }}>{w.title}</span>
-                  </div>
-                ))}
+              <div className="split" style={{ marginBottom: 28, alignItems: 'end' }}>
+                <div>
+                  <p className="eyebrow" style={{ color: 'var(--marigold)' }}>Recognition</p>
+                  <h2 style={{ margin: 0 }}>Awards & speaking</h2>
+                </div>
+                <div style={{ textAlign: 'right' }}><Link href="/awards" className="btn btn-light btn-sm">See all awards →</Link></div>
               </div>
+              <AwardsGrid items={awards} dark />
             </div>
           </div>
         </section>

@@ -396,6 +396,40 @@ export const Testimonials: CollectionConfig = {
   ],
 }
 
+export const Awards: CollectionConfig = {
+  slug: 'awards',
+  labels: { singular: 'Award', plural: 'Awards & recognition' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'organisation', 'year', 'published'], group: 'Website content' },
+  access: contentAccess,
+  defaultSort: 'order',
+  hooks: refresh,
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    {
+      type: 'row',
+      fields: [
+        { name: 'organisation', type: 'text', label: 'Given by' },
+        { name: 'year', type: 'text' },
+        {
+          name: 'kind',
+          type: 'select',
+          defaultValue: 'award',
+          options: [
+            { label: 'Award', value: 'award' },
+            { label: 'Speaking / event', value: 'speaking' },
+            { label: 'Recognition', value: 'recognition' },
+          ],
+        },
+      ],
+    },
+    { name: 'image', type: 'upload', relationTo: 'media', label: 'Main photo' },
+    { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true, label: 'More photos (optional)' },
+    { name: 'note', type: 'textarea', label: 'Short description (optional)' },
+    published,
+    order,
+  ],
+}
+
 export const Inquiries: CollectionConfig = {
   slug: 'inquiries',
   labels: { singular: 'Enquiry', plural: 'Enquiries' },

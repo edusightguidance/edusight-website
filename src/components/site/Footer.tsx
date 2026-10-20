@@ -39,6 +39,7 @@ export function Footer({ s }: { s: S }) {
             <h4>EDUSIGHT</h4>
             <ul>
               <li><Link href="/about">About Bhavana</Link></li>
+              <li><Link href="/awards">Awards</Link></li>
               <li><Link href="/blog">Blog</Link></li>
               <li><Link href="/reviews">Reviews</Link></li>
               <li><Link href="/contact">Contact</Link></li>

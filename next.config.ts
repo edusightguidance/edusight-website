@@ -21,7 +21,6 @@ const nextConfig: NextConfig = {
       { source: '/appointments', destination: '/contact', permanent: true },
       { source: '/aboutedusight', destination: '/about', permanent: true },
       { source: '/ourcounselor', destination: '/about', permanent: true },
-      { source: '/awards', destination: '/about', permanent: true },
       { source: '/curriculum-counseling', destination: '/services/curriculum-school-selection', permanent: true },
       { source: '/career-roadmap', destination: '/services/career-guidance-assessments', permanent: true },
       { source: '/mental-health', destination: '/services/student-well-being-resilience', permanent: true },

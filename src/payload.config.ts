@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
-import { Books, Careers, Categories, Inquiries, Pages, Posts, Services, Tags, Testimonials } from './collections/content'
+import { Awards, Books, Careers, Categories, Inquiries, Pages, Posts, Services, Tags, Testimonials } from './collections/content'
 import { Attempts, Media, Orders, PrivateFiles, Products, Tests } from './collections/portal'
 import { About, Homepage, SiteSettings } from './globals'
 
@@ -46,7 +46,7 @@ export default buildConfig({
       beforeDashboard: ['/components/admin/Welcome#Welcome'],
     },
   },
-  collections: [Posts, Categories, Tags, Testimonials, Services, Careers, Pages, Media, Books, Products, Orders, PrivateFiles, Tests, Attempts, Users, Inquiries],
+  collections: [Posts, Categories, Tags, Testimonials, Services, Careers, Awards, Pages, Media, Books, Products, Orders, PrivateFiles, Tests, Attempts, Users, Inquiries],
   globals: [Homepage, About, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
