@@ -8,6 +8,8 @@ const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
   // The PDF report embeds the logo from disk, so ship it with the server functions.
+  // jsdom (used only by the old-blog importer) must load from node_modules, not be bundled.
+  serverExternalPackages: ['jsdom'],
   async redirects() {
     return [
       { source: '/resources', destination: '/blog', permanent: true },
