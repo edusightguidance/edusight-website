@@ -11,6 +11,7 @@ const LINKS = [
   ['/careers', 'Careers'],
   ['/books', 'Books'],
   ['/blog', 'Blog'],
+  ['/reviews', 'Reviews'],
   ['/about', 'About'],
 ]
 

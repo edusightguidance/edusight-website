@@ -376,3 +376,6 @@ html, body { overflow-x: clip; }
 .post-cover img.post-logo { width: 34%; max-width: 150px; height: auto; object-fit: contain; opacity: 0.95; }
 select.chip { padding-right: 34px; appearance: auto; }
 .prose img { height: auto; }
+/* keep 8 menu items on one line on laptops */
+@media (max-width: 1360px) { .nav a { padding: 8px 7px; font-size: 0.9rem; } .nav-cta .btn-sm { padding: 10px 14px; } .header .wrap { gap: 12px; } }
+@media (max-width: 1180px) { .nav, .nav-cta .hide-m { display: none; } .burger { display: block; } .mobile-nav.open { display: flex; flex-direction: column; gap: 4px; padding: 12px 20px 24px; border-top: 1px solid var(--line); background: var(--paper); } .mobile-nav a { text-decoration: none; font-weight: 600; padding: 12px 6px; border-bottom: 1px solid var(--line); } }
