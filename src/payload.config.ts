@@ -11,7 +11,6 @@ import { Users } from './collections/Users'
 import { Books, Careers, Categories, Inquiries, Pages, Posts, Services, Tags, Testimonials } from './collections/content'
 import { Attempts, Media, Orders, PrivateFiles, Products, Tests } from './collections/portal'
 import { About, Homepage, SiteSettings } from './globals'
-import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -54,8 +53,7 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || '' },
-    // Production applies these on start-up; development syncs the schema automatically.
-    prodMigrations: migrations,
+    // Database upgrades run once, before each production build ("npm run build" → payload migrate).
   }),
   email: process.env.RESEND_API_KEY
     ? resendAdapter({
