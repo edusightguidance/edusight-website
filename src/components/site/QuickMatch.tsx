@@ -69,9 +69,9 @@ export function QuickMatch({ compact = false }: { compact?: boolean }) {
           </button>
         ))}
       </div>
-      <button className="btn btn-dark" disabled={picked.length < 3} onClick={() => setDone(true)}>
-        {picked.length < 3 ? `Pick at least 3 (${picked.length})` : 'Show my interest code →'}
-      </button>
+      {picked.length >= 3 && (
+        <button className="btn btn-dark" onClick={() => setDone(true)}>Show my interest code →</button>
+      )}
     </div>
   )
 }

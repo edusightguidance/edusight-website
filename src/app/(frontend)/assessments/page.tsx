@@ -38,19 +38,43 @@ export default async function Assessments({ searchParams }: { searchParams: Prom
       </section>
       <section className="section" style={{ paddingTop: 24 }} id="plans">
         <div className="wrap">
-          <h2 className="center">Choose your plan</h2>
-          <div className="grid g3" style={{ marginTop: 32 }}>
-            {products.docs.map((p) => (
-              <div className={`price-card${p.featured ? ' featured' : ''}`} key={p.id} id={p.slug}>
-                {p.featured && <span className="badge">Most popular</span>}
-                <h3>{p.title}</h3>
-                <p className="muted" style={{ margin: 0 }}>{p.summary}</p>
-                <div className="price">{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
-                <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
-                <div style={{ marginTop: 'auto' }}><BuyButton product={p.slug} label={`Get ${p.title.split('·')[0].trim()}`} className={`btn ${p.featured ? 'btn-primary' : 'btn-dark'}`} /></div>
+          <h2 className="center">Take the Test</h2>
+          {products.docs.length === 1 ? (
+            products.docs.map((p) => (
+              <div className={`price-card price-wide${p.featured ? ' featured' : ''}`} key={p.id} id={p.slug} style={{ marginTop: 32 }}>
+                <div className="pw-main">
+                  <span className="ico t-lagoon"><Icon name="compass" /></span>
+                  <h3>{p.title}</h3>
+                  <p className="muted" style={{ margin: 0 }}>{p.summary}</p>
+                  <div className="price" style={{ margin: '14px 0 6px' }}>{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
+                  <p className="muted" style={{ margin: '0 0 18px', fontSize: '0.9rem' }}>One-time payment · Secure card checkout via Stripe · Tests unlock instantly</p>
+                  <div><BuyButton product={p.slug} label={`Get ${p.title.split('·')[0].trim()}`} className="btn btn-primary" /></div>
+                </div>
+                <div className="pw-side">
+                  <p className="eyebrow" style={{ marginBottom: 6 }}>What’s included</p>
+                  <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <div className="pw-facts">
+                    <div><b>At home</b><span>Take it online, at your own pace</span></div>
+                    <div><b>Reviewed</b><span>By a counselling psychologist</span></div>
+                    <div><b>PDF report</b><span>With personal recommendations</span></div>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className={`grid ${products.docs.length === 2 ? 'g2' : 'g3'}`} style={{ marginTop: 32 }}>
+              {products.docs.map((p) => (
+                <div className={`price-card${p.featured ? ' featured' : ''}`} key={p.id} id={p.slug}>
+                  {p.featured && <span className="badge">Most popular</span>}
+                  <h3>{p.title}</h3>
+                  <p className="muted" style={{ margin: 0 }}>{p.summary}</p>
+                  <div className="price">{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
+                  <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <div style={{ marginTop: 'auto' }}><BuyButton product={p.slug} label={`Get ${p.title.split('·')[0].trim()}`} className={`btn ${p.featured ? 'btn-primary' : 'btn-dark'}`} /></div>
+                </div>
+              ))}
+            </div>
+          )}
           <p className="center muted" style={{ marginTop: 20, fontSize: '0.92rem' }}>Schools: ask about group access for whole year groups. <Link href="/contact?topic=School%20workshop%20or%20talk">Contact us</Link></p>
         </div>
       </section>
