@@ -3,6 +3,7 @@ import { db } from '@/lib/data'
 import { BuyButton } from '@/components/site/Buy'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
 import { PageHero } from '@/components/site/PageHero'
+import { PlanWide } from '@/components/site/PlanWide'
 
 export const revalidate = 60
 export const metadata = { title: 'Psychometric career assessments', description: 'Online OCEAN personality, RIASEC career interest and Work Values tests with a psychologist-reviewed PDF report. For students in Dubai, the UAE and worldwide.' }
@@ -40,27 +41,9 @@ export default async function Assessments({ searchParams }: { searchParams: Prom
         <div className="wrap">
           <h2 className="center">Take the Test</h2>
           {products.docs.length === 1 ? (
-            products.docs.map((p) => (
-              <div className={`price-card price-wide${p.featured ? ' featured' : ''}`} key={p.id} id={p.slug} style={{ marginTop: 32 }}>
-                <div className="pw-main">
-                  <span className="ico t-lagoon"><Icon name="compass" /></span>
-                  <h3>{p.title}</h3>
-                  <p className="muted" style={{ margin: 0 }}>{p.summary}</p>
-                  <div className="price" style={{ margin: '14px 0 6px' }}>{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
-                  <p className="muted" style={{ margin: '0 0 18px', fontSize: '0.9rem' }}>One-time payment · Secure card checkout via Stripe · Tests unlock instantly</p>
-                  <div><BuyButton product={p.slug} label={`Get ${p.title.split('·')[0].trim()}`} className="btn btn-primary" /></div>
-                </div>
-                <div className="pw-side">
-                  <p className="eyebrow" style={{ marginBottom: 6 }}>What’s included</p>
-                  <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
-                  <div className="pw-facts">
-                    <div><b>At home</b><span>Take it online, at your own pace</span></div>
-                    <div><b>Reviewed</b><span>By a counselling psychologist</span></div>
-                    <div><b>PDF report</b><span>With personal recommendations</span></div>
-                  </div>
-                </div>
-              </div>
-            ))
+            <div style={{ marginTop: 32 }}>
+              <PlanWide p={products.docs[0]} action={<BuyButton product={products.docs[0].slug} label={`Get ${products.docs[0].title.split('·')[0].trim()}`} className="btn btn-primary" />} />
+            </div>
           ) : (
             <div className={`grid ${products.docs.length === 2 ? 'g2' : 'g3'}`} style={{ marginTop: 32 }}>
               {products.docs.map((p) => (

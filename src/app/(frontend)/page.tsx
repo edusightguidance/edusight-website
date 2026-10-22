@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { PlanWide } from '@/components/site/PlanWide'
 import { db, getSettings } from '@/lib/data'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
 import { QuickMatch } from '@/components/site/QuickMatch'
@@ -150,7 +151,10 @@ export default async function Home() {
               </div>
               <p className="lead">Take scientifically grounded tests online, at your own pace. Every report is personally reviewed by Bhavana before it reaches you — no robot verdicts.</p>
             </div>
-            <div className="grid g3">
+            {products.docs.length === 1 ? (
+              <PlanWide p={products.docs[0]} summary={products.docs[0].tagline || products.docs[0].summary} action={<Link href={`/assessments#${products.docs[0].slug}`} className="btn btn-primary">Take the Test</Link>} />
+            ) : (
+            <div className={`grid ${products.docs.length === 2 ? 'g2' : 'g3'}`}>
               {products.docs.map((p) => (
                 <div className={`price-card${p.featured ? ' featured' : ''}`} key={p.id}>
                   {p.featured && <span className="badge">Most popular</span>}
@@ -162,6 +166,7 @@ export default async function Home() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </section>
       )}
