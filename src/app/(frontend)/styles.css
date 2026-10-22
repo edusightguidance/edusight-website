@@ -410,3 +410,19 @@ select.chip { padding-right: 34px; appearance: auto; }
 .lb-prev { left: -22px; top: 45%; }
 .lb-next { right: -22px; top: 45%; }
 @media (max-width: 640px) { .lb-prev { left: 4px; } .lb-next { right: 4px; } .lb-close { right: 4px; top: 4px; } }
+
+/* careers & specialization pathways */
+.paths { gap: 28px; }
+.path-card { padding: 36px 34px; gap: 10px; border-radius: calc(var(--r) + 6px); }
+.path-card .ico { width: 64px; height: 64px; border-radius: 20px; }
+.path-card .ico svg { width: 30px; height: 30px; }
+.path-card h3 { font-size: 1.5rem; line-height: 1.2; margin: 0; }
+.path-card .path-tag { color: var(--coral-d); font-weight: 700; font-size: 0.95rem; }
+.path-card p { font-size: 1rem; line-height: 1.55; }
+.path-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.path-chips span { background: var(--lilac); border-radius: 999px; padding: 5px 12px; font-size: 0.82rem; font-weight: 600; }
+@media (max-width: 960px) { .path-card { padding: 30px 26px; } }
+
+/* desktop menu: two-line labels */
+.nav a.two { display: inline-flex; flex-direction: column; line-height: 1.1; text-align: center; }
+.two-line { display: inline-flex; flex-direction: column; line-height: 1.1; text-align: center; }

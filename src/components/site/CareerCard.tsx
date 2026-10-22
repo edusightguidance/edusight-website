@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import { OUTLOOK, STREAMS } from '@/lib/careers'
+import { OUTLOOK, STREAMS, careerHref } from '@/lib/careers'
 
-type C = { id: number; slug?: string | null; title: string; stream: string; riasec?: string[] | null; summary: string; outlook?: string | null }
+type C = { id: number; slug?: string | null; title: string; stream: string; riasec?: string[] | null; summary: string; outlook?: string | null; specialization?: number | { slug?: string | null } | null }
 
 export function CareerCard({ c, match }: { c: C; match?: number }) {
   return (
-    <Link href={`/careers/${c.slug}`} className="career">
+    <Link href={careerHref(c)} className="career">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
         <div className="codes">{(c.riasec || []).map((k) => <span key={k} className={`code code-${k}`}>{k}</span>)}</div>
         {match !== undefined ? <span className="badge mint">{match}% match</span> : <span style={{ fontSize: '0.8rem' }}>{OUTLOOK[c.outlook || 'growing']}</span>}

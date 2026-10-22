@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { db, getSettings } from '@/lib/data'
 import { Icon } from '@/components/site/Icon'
 import { PageHero } from '@/components/site/PageHero'
@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Service({ params }: { params: Promise<{ slug: string }> }) {
   const s = await get((await params).slug)
   if (!s) notFound()
+  // Specializations now live under Careers & Specialization Pathways
+  if (s.kind === 'specialization') permanentRedirect(`/careers/${s.slug}`)
   const [settings, reviews] = await Promise.all([getSettings(), findReviews({ serviceId: s.id, limit: 3 })])
   return (
     <>
-      <PageHero crumbs={[['/services', 'Services']]} eyebrow={s.kind === 'specialization' ? 'Career specialization' : s.tagline || 'Service'} title={s.title} lead={s.summary}>
+      <PageHero crumbs={[['/services', 'Services']]} eyebrow={s.tagline || 'Service'} title={s.title} lead={s.summary}>
         <div className="btns" style={{ marginTop: 26 }}>
           <a href={settings.bookingLink || '/contact'} className="btn btn-primary">Book a consultation</a>
           <Link href="/assessments" className="btn btn-ghost">Start with an assessment</Link>

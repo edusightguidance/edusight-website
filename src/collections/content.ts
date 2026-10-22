@@ -128,11 +128,18 @@ export const Careers: CollectionConfig = {
   slug: 'careers',
   hooks: refresh,
   labels: { singular: 'Career', plural: 'Career Library' },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'stream', 'riasec', 'published'], group: 'Website content' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'specialization', 'stream', 'published'], group: 'Website content' },
   access: contentAccess,
   defaultSort: 'title',
   fields: [
     { name: 'title', type: 'text', required: true },
+    {
+      name: 'specialization',
+      type: 'relationship',
+      relationTo: 'services',
+      filterOptions: { kind: { equals: 'specialization' } },
+      admin: { description: 'The career specialization this career appears under (Careers & Specialization Pathways page)' },
+    },
     {
       name: 'stream',
       type: 'select',

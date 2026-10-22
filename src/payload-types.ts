@@ -429,6 +429,10 @@ export interface User {
 export interface Career {
   id: number;
   title: string;
+  /**
+   * The career specialization this career appears under (Careers & Specialization Pathways page)
+   */
+  specialization?: (number | null) | Service;
   stream: 'bio' | 'eng' | 'com' | 'hum' | 'combo';
   /**
    * Used by the Career Explorer to match students
@@ -971,6 +975,7 @@ export interface ServicesSelect<T extends boolean = true> {
  */
 export interface CareersSelect<T extends boolean = true> {
   title?: T;
+  specialization?: T;
   stream?: T;
   riasec?: T;
   summary?: T;

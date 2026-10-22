@@ -7,8 +7,8 @@ import { Icon, Mark } from './Icon'
 const LINKS = [
   ['/services', 'Services'],
   ['/assessments', 'Assessments'],
-  ['/career-explorer', 'Career Explorer'],
-  ['/careers', 'Careers'],
+  ['/career-explorer', 'Career|Explorer'],
+  ['/careers', 'Careers &|Specialization Pathways'],
   ['/books', 'Books'],
   ['/blog', 'Blog'],
   ['/reviews', 'Reviews'],
@@ -37,15 +37,18 @@ export function Header({ loggedIn, booking }: { loggedIn: boolean; booking: stri
           </span>
         </Link>
         <nav className="nav" aria-label="Main">
-          {LINKS.map(([href, label]) => (
-            <Link key={href} href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>
-              {label}
+          {LINKS.map(([href, label]) => {
+            const [l1, l2] = label.split('|')
+            return (
+            <Link key={href} href={href} className={l2 ? 'two' : undefined} aria-current={path.startsWith(href) ? 'page' : undefined}>
+              {l2 ? <><span>{l1}</span><span>{l2}</span></> : l1}
             </Link>
-          ))}
+            )
+          })}
         </nav>
         <div className="nav-cta">
           <Link href={loggedIn ? '/portal' : '/login'} className="btn btn-ghost btn-sm hide-m">
-            {loggedIn ? 'My portal' : 'Log in'}
+            {loggedIn ? <span className="two-line"><span>My</span><span>Portal</span></span> : 'Log in'}
           </Link>
           <a href={booking} className="btn btn-primary btn-sm hide-m">Book a call</a>
           <button className="burger" aria-label="Open menu" aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -55,7 +58,7 @@ export function Header({ loggedIn, booking }: { loggedIn: boolean; booking: stri
       </div>
       <nav className={`mobile-nav${open ? ' open' : ''}`} aria-label="Mobile">
         {LINKS.map(([href, label]) => (
-          <Link key={href} href={href}>{label}</Link>
+          <Link key={href} href={href}>{label.replace('|', ' ')}</Link>
         ))}
         <Link href={loggedIn ? '/portal' : '/login'}>{loggedIn ? 'My portal' : 'Log in / Sign up'}</Link>
         <a href={booking} className="btn btn-primary" style={{ marginTop: 12 }}>Book a call</a>

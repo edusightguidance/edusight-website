@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SITE } from '@/lib/blog'
 import { livePosts } from '@/collections/content'
+import { careerHref } from '@/lib/careers'
 
 export const revalidate = 3600
 
@@ -12,8 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     payload.find({ collection: collection as never, where, limit: 5000, depth: 0, pagination: false, overrideAccess: true }).then((r) => r.docs as unknown as { slug: string; updatedAt: string }[])
   const [posts, services, careers, books, cats, pages] = await Promise.all([
     all('posts', livePosts()),
-    all('services', { published: { equals: true } }),
-    all('careers', { published: { equals: true } }),
+    all('services', { published: { equals: true } }) as unknown as Promise<{ slug: string; updatedAt: string; kind?: string }[]>,
+    payload.find({ collection: 'careers', where: { published: { equals: true } }, limit: 5000, depth: 1, pagination: false, overrideAccess: true }).then((r) => r.docs),
     all('books', { published: { equals: true } }),
     all('categories'),
     all('pages', { published: { equals: true } }),
@@ -25,8 +26,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...fixed.map((p) => ({ url: `${base}${p}` })),
     ...map('/blog', posts),
     ...map('/blog/category', cats),
-    ...map('/services', services),
-    ...map('/careers', careers),
+    ...map('/services', services.filter((s) => s.kind !== 'specialization')),
+    ...map('/careers', services.filter((s) => s.kind === 'specialization')),
+    ...careers.map((c) => ({ url: `${base}${careerHref(c)}`, lastModified: c.updatedAt })),
     ...map('/books', books),
     ...map('/p', pages),
   ]

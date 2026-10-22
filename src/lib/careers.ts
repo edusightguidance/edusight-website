@@ -18,3 +18,9 @@ export function fit(student: string, career: string[] = []) {
   })
   return Math.min(100, Math.round((s / 7.8) * 100))
 }
+
+/** Web address of a career: nested under its specialization when it has one. */
+export function careerHref(c: { slug?: string | null; specialization?: number | { slug?: string | null } | null }) {
+  const sp = c.specialization && typeof c.specialization === 'object' ? c.specialization.slug : null
+  return sp ? `/careers/${sp}/${c.slug}` : `/careers/${c.slug}`
+}

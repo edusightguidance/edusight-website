@@ -188,7 +188,7 @@ export default async function Home() {
             </div>
             <div className="grid g4">
               {specs.docs.map((sp, i) => (
-                <Link href={`/services/${sp.slug}`} className="card" key={sp.id}>
+                <Link href={`/careers/${sp.slug}`} className="card" key={sp.id}>
                   <span className={`ico ${TINTS[(i + 1) % 4]}`}><Icon name={sp.icon || 'compass'} /></span>
                   <h3 style={{ fontSize: '1.15rem' }}>{sp.title}</h3>
                   <p style={{ fontSize: '0.95rem' }}>{sp.tagline}</p>

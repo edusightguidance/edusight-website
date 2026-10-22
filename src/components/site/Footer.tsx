@@ -31,7 +31,7 @@ export function Footer({ s }: { s: S }) {
               <li><Link href="/services">Services</Link></li>
               <li><Link href="/assessments">Psychometric assessments</Link></li>
               <li><Link href="/career-explorer">Career Explorer</Link></li>
-              <li><Link href="/careers">Career library</Link></li>
+              <li><Link href="/careers">Careers &amp; Specialization Pathways</Link></li>
               <li><Link href="/books">Books</Link></li>
             </ul>
           </div>

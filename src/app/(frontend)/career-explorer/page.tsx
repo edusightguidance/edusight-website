@@ -30,7 +30,7 @@ export default async function Explorer() {
               <p>Included free with the Complete Career Assessment.</p>
               <div className="btns">
                 {user ? <BuyButton product="career-explorer" label="Unlock now" /> : <Link className="btn btn-primary" href="/register?next=/career-explorer">Sign up to unlock</Link>}
-                <Link className="btn btn-light" href="/careers">Browse the library</Link>
+                <Link className="btn btn-light" href="/careers">Browse career pathways</Link>
               </div>
             </div>
           </div>
