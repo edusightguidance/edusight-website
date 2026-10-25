@@ -8,7 +8,7 @@ export function BookCover({ b }: { b: B }) {
     <div className="book-cover" style={{ background: b.coverColor || '#16163F' }}>
       <small>EDUSIGHT GUIDES</small>
       <div><b>{b.title}</b><p style={{ margin: '10px 0 0', fontSize: '0.88rem', opacity: 0.85 }}>{b.subtitle}</p></div>
-      <small>BHAVANA SOOD</small>
+      <small>EDUSIGHT</small>
     </div>
   )
 }

@@ -71,7 +71,7 @@ export const Users: CollectionConfig = {
             .sendEmail({
               to: doc.parentEmail,
               subject: `Please approve ${doc.name}'s EDUSIGHT account`,
-              html: `<p>Dear Parent / Guardian,</p><p><b>${doc.name}</b> has created an account on EDUSIGHT to take career guidance assessments. As they are under 18, we need your consent before they can begin.</p><p><a href="${url}" style="background:#16163F;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none">Review and give consent</a></p><p>Questions? Reply to this email or WhatsApp +971 50 451 8940.</p><p>— Bhavana Sood, EDUSIGHT</p>`,
+              html: `<p>Dear Parent / Guardian,</p><p><b>${doc.name}</b> has created an account on EDUSIGHT to take career guidance assessments. As they are under 18, we need your consent before they can begin.</p><p><a href="${url}" style="background:#16163F;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none">Review and give consent</a></p><p>Questions? Reply to this email or WhatsApp +971 50 451 8940.</p><p>— The EDUSIGHT team</p>`,
             })
             .catch((e: unknown) => req.payload.logger.error(e))
         }

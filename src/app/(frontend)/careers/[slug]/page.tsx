@@ -84,7 +84,7 @@ async function Specialization({ s }: { s: Service }) {
             )}
           </div>
           <aside className="panel panel-ink" style={{ position: 'sticky', top: 100 }}>
-            <h3 style={{ color: '#fff', fontSize: '1.6rem' }}>Talk it through with Bhavana</h3>
+            <h3 style={{ color: '#fff', fontSize: '1.6rem' }}>Talk it through with the EDUSIGHT team</h3>
             <p>A first call is the quickest way to see where your child stands and what to do next.</p>
             {s.audience?.length ? <p style={{ fontSize: '0.9rem' }}>For: {s.audience.join(' · ')}</p> : null}
             <div className="btns">

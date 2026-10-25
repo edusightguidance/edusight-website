@@ -29,7 +29,7 @@ export const SOURCE_LABEL: Record<string, string> = {
 type Socials = { instagram?: string | null; facebook?: string | null; linkedin?: string | null; youtube?: string | null } | null | undefined
 
 export function SocialLinks({ socials, size = 20, className = 'socials' }: { socials: Socials; size?: number; className?: string }) {
-  const items = (['instagram', 'facebook', 'linkedin', 'youtube'] as const).filter((k) => socials?.[k])
+  const items = (['instagram', 'facebook', 'linkedin', 'youtube'] as const).filter((k) => socials?.[k] && !/bhavana/i.test(socials[k] || ''))
   if (!items.length) return null
   return (
     <div className={className}>

@@ -5,13 +5,13 @@ import { Hl } from '@/components/site/Icon'
 import { PageHero } from '@/components/site/PageHero'
 
 export const revalidate = 60
-export const metadata = { title: 'Books & guides', description: 'Career and education guidebooks by Bhavana Sood for students and parents: curricula, healthcare careers, psychology, profile building and university prep.' }
+export const metadata = { title: 'Books & guides', description: 'Career and education guidebooks by the EDUSIGHT team for students and parents: curricula, healthcare careers, psychology, profile building and university prep.' }
 
 export default async function Books() {
   const books = await (await db()).find({ collection: 'books', sort: 'order', limit: 50 })
   return (
     <>
-      <PageHero eyebrow="Books & guides" title={<>Answers you can <Hl>keep</Hl>.</>} lead="In-depth guides written by Bhavana Sood from years of questions asked by real families." />
+      <PageHero eyebrow="Books & guides" title={<>Answers you can <Hl>keep</Hl>.</>} lead="In-depth guides written by the EDUSIGHT team from years of questions asked by real families." />
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="wrap grid g4">
           {books.docs.map((b) => (

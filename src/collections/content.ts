@@ -302,7 +302,7 @@ export const Posts: CollectionConfig = {
     },
     { name: 'categories', type: 'relationship', relationTo: 'categories', hasMany: true, admin: { position: 'sidebar' } },
     { name: 'tags', type: 'relationship', relationTo: 'tags', hasMany: true, admin: { position: 'sidebar' } },
-    { name: 'author', type: 'text', defaultValue: 'Bhavana Sood', admin: { position: 'sidebar' } },
+    { name: 'author', type: 'text', defaultValue: 'The EDUSIGHT team', admin: { position: 'sidebar' } },
     { name: 'featured', type: 'checkbox', label: 'Feature at top of blog', admin: { position: 'sidebar' } },
     { name: 'readingMinutes', type: 'number', admin: { readOnly: true, position: 'sidebar' } },
     {

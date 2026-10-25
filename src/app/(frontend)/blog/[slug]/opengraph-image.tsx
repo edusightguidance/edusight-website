@@ -12,7 +12,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
       <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: '#16163F', padding: 72, color: '#fff' }}>
         <div style={{ display: 'flex', fontSize: 30, letterSpacing: 6, color: '#FFB627', fontWeight: 700 }}>EDUSIGHT · BLOG</div>
         <div style={{ display: 'flex', fontSize: 66, fontWeight: 800, lineHeight: 1.08 }}>{p?.title || 'EDUSIGHT'}</div>
-        <div style={{ display: 'flex', fontSize: 28, color: '#c9c8e6' }}>Bhavana Sood · Career & education guidance, Dubai</div>
+        <div style={{ display: 'flex', fontSize: 28, color: '#c9c8e6' }}>EDUSIGHT · Career & education guidance, Dubai</div>
       </div>
     ),
     size,

@@ -14,7 +14,7 @@ export function ReviewForm({ services, defaultName = '', defaultEmail = '' }: { 
     setState(r.ok ? 'done' : j.error || 'Something went wrong. Please try again.')
   }
   if (state === 'done')
-    return <div className="alert ok"><b>Thank you!</b> Your review has been sent to Bhavana and will appear once approved.</div>
+    return <div className="alert ok"><b>Thank you!</b> Your review has been sent to the EDUSIGHT team and will appear once approved.</div>
   return (
     <form className="form" onSubmit={submit}>
       <h3>Leave a review</h3>

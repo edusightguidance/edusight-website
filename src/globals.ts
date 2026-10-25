@@ -29,7 +29,7 @@ export const SiteSettings: GlobalConfig = {
       fields: [
         { name: 'instagram', type: 'text', defaultValue: 'https://www.instagram.com/edu.sight/' },
         { name: 'facebook', type: 'text', defaultValue: 'https://www.facebook.com/EduSightAE/' },
-        { name: 'linkedin', type: 'text', defaultValue: 'https://www.linkedin.com/in/bhavanasood/' },
+        { name: 'linkedin', type: 'text', defaultValue: '' },
         { name: 'youtube', type: 'text' },
       ],
     },
@@ -81,12 +81,12 @@ export const Homepage: GlobalConfig = {
 export const About: GlobalConfig = {
   slug: 'about',
   hooks,
-  label: 'About Bhavana',
+  label: 'About page',
   admin: { group: 'Website content' },
   access: { read: () => true, update: staffOnly },
   fields: [
     { name: 'photo', type: 'upload', relationTo: 'media' },
-    { name: 'headline', type: 'text', defaultValue: 'Hi, I’m Bhavana.' },
+    { name: 'headline', type: 'text', defaultValue: 'Meet the EDUSIGHT team.' },
     { name: 'role', type: 'text', defaultValue: 'Counselling Psychologist & Career Advisor · Founder, EDUSIGHT' },
     { name: 'intro', type: 'textarea' },
     { name: 'story', type: 'textarea' },

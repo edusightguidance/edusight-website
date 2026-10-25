@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.edusightconsulting.com'),
   title: { default: 'EDUSIGHT · Career & University Guidance in Dubai', template: '%s · EDUSIGHT' },
   description:
-    'Psychometric career assessments, subject selection, curriculum advice and university admissions guidance for students and parents in Dubai and the UAE. Led by counselling psychologist Bhavana Sood.',
+    'Psychometric career assessments, subject selection, curriculum advice and university admissions guidance for students and parents in Dubai and the UAE. Led by the EDUSIGHT team.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

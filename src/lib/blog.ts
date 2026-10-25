@@ -24,3 +24,6 @@ export async function findPosts(o: { page?: number; categoryId?: number; tagId?:
 
 export const fmtDate = (d?: string | null) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
+
+/** Author shown on posts. The founder's name is hidden for now; posts show the team instead. */
+export const authorName = (a?: string | null) => (!a || /bhavana/i.test(a) ? 'The EDUSIGHT team' : a)

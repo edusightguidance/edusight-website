@@ -3,7 +3,7 @@ import { Hl } from '@/components/site/Icon'
 
 export const metadata = {
   title: 'Blog — careers, universities & parenting',
-  description: 'Practical articles on careers, subject choices, curricula, university admissions and parenting teens, by counselling psychologist Bhavana Sood.',
+  description: 'Practical articles on careers, subject choices, curricula, university admissions and parenting teens, by the EDUSIGHT team.',
   alternates: { types: { 'application/rss+xml': '/blog/rss.xml' } },
 }
 

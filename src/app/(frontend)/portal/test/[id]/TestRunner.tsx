@@ -41,7 +41,7 @@ export function TestRunner({ id, questions, scale, initial }: Props) {
       <div className="auth-card center">
         <div style={{ fontSize: '3rem' }}>🎉</div>
         <h2>All done — thank you!</h2>
-        <p className="muted">Your answers are with Bhavana. She’ll review your results and add personal recommendations. Your PDF report will be emailed to you{''} and appear in your portal.</p>
+        <p className="muted">Your answers are with the EDUSIGHT team. They’ll review your results and add personal recommendations. Your PDF report will be emailed to you{''} and appear in your portal.</p>
         <a href="/portal" className="btn btn-primary">Back to my portal</a>
       </div>
     )

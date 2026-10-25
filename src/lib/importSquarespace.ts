@@ -137,7 +137,7 @@ export async function importSquarespace(payload: Payload, base: string) {
         body: body as never,
         image: cover || undefined,
         publishedAt: new Date(it.publishOn || it.addedOn || Date.now()).toISOString(),
-        author: it.author?.displayName || 'Bhavana Sood',
+        author: it.author?.displayName || 'The EDUSIGHT team',
         categories: await termIds(payload, 'categories', it.categories),
         tags: await termIds(payload, 'tags', it.tags),
         legacySlugs: legacy && legacy !== slug ? [legacy] : [],

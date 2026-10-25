@@ -46,7 +46,7 @@ export const afterAttemptChange: CollectionAfterChangeHook = async ({ doc, previ
     .sendEmail({
       to,
       subject: `Your EDUSIGHT ${test.name} report is ready`,
-      html: `<p>Dear ${user.name.split(' ')[0]},</p><p>Your <b>${test.name}</b> report has been reviewed by Bhavana Sood and is attached. You can also download it anytime from your portal: <a href="${process.env.NEXT_PUBLIC_SITE_URL || ''}/portal">${process.env.NEXT_PUBLIC_SITE_URL || ''}/portal</a></p><p>To talk through your results, reply here or WhatsApp +971 50 451 8940.</p><p>— EDUSIGHT · Clarity · Confidence · Direction</p>`,
+      html: `<p>Dear ${user.name.split(' ')[0]},</p><p>Your <b>${test.name}</b> report has been reviewed by the EDUSIGHT team and is attached. You can also download it anytime from your portal: <a href="${process.env.NEXT_PUBLIC_SITE_URL || ''}/portal">${process.env.NEXT_PUBLIC_SITE_URL || ''}/portal</a></p><p>To talk through your results, reply here or WhatsApp +971 50 451 8940.</p><p>— EDUSIGHT · Clarity · Confidence · Direction</p>`,
       attachments: [{ filename: `EDUSIGHT-${safe}.pdf`, content: pdf }],
     })
     .catch((e: unknown) => payload.logger.error(e))

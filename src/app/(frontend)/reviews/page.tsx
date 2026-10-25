@@ -70,7 +70,7 @@ export default async function Reviews({ searchParams }: { searchParams: Promise<
           <div id="write" className="split" style={{ marginTop: 64, alignItems: 'start' }}>
             <div>
               <h2>Worked with EDUSIGHT?</h2>
-              <p className="lead">Your experience helps other families make confident choices. Every review is read by Bhavana before it appears.</p>
+              <p className="lead">Your experience helps other families make confident choices. Every review is read by the EDUSIGHT team before it appears.</p>
               {user && <p className="muted">You’re logged in — clients get a <b>✓ Verified client</b> badge.</p>}
             </div>
             <div className="auth-card"><ReviewForm services={services.docs.map((x) => ({ id: x.id, title: x.title }))} defaultName={user?.name || ''} defaultEmail={user?.email || ''} /></div>

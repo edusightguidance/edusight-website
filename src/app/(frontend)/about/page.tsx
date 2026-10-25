@@ -5,7 +5,7 @@ import { getAwards } from '@/lib/awards'
 import { AwardsGrid } from '@/components/site/Awards'
 
 export const revalidate = 60
-export const metadata = { title: 'About Bhavana Sood', description: 'Counselling psychologist and career advisor with 12+ years of experience in curriculum pathways, career guidance and mental health counselling.' }
+export const metadata = { title: 'About EDUSIGHT', description: 'Counselling psychologist and career advisor with 12+ years of experience in curriculum pathways, career guidance and mental health counselling.' }
 
 export default async function About() {
   const [a, awards] = await Promise.all([(await db()).findGlobal({ slug: 'about', depth: 1 }), getAwards({ limit: 6 })])
@@ -16,18 +16,18 @@ export default async function About() {
         <div className="wrap split">
           <div>
             <p className="eyebrow">About EDUSIGHT</p>
-            <h1>{a.headline?.replace('Bhavana.', '')} <Hl>Bhavana.</Hl></h1>
+            <h1>{!a.headline || /bhavana/i.test(a.headline) ? <>Meet the <Hl>EDUSIGHT team.</Hl></> : a.headline}</h1>
             <p style={{ fontWeight: 700 }}>{a.role}</p>
             <p className="lead">{a.intro}</p>
-            <div className="btns"><Link className="btn btn-primary" href="/contact">Work with me</Link></div>
+            <div className="btns"><Link className="btn btn-primary" href="/contact">Work with us</Link></div>
           </div>
           <div style={{ position: 'relative', maxWidth: 440, justifySelf: 'center', width: '100%' }}>
             {photo?.url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={photo.url} alt={photo.alt || 'Bhavana Sood'} style={{ borderRadius: 32, aspectRatio: '4/5', objectFit: 'cover', width: '100%' }} />
+              <img src={photo.url} alt={photo.alt && !/bhavana/i.test(photo.alt) ? photo.alt : 'The EDUSIGHT team'} style={{ borderRadius: 32, aspectRatio: '4/5', objectFit: 'cover', width: '100%' }} />
             ) : (
               <div style={{ aspectRatio: '4/5', borderRadius: 32, background: 'var(--ink)', display: 'grid', placeItems: 'center', color: '#fff', fontFamily: 'var(--display)', fontSize: '7rem', fontWeight: 800 }}>
-                BS
+                E
               </div>
             )}
             <div className="sticker" style={{ left: -20, bottom: 30, transform: 'rotate(-3deg)' }}>🎓 12+ years<small>guiding families</small></div>

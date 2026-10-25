@@ -22,7 +22,7 @@ export function Footer({ s }: { s: S }) {
               <Mark />
               <b>EDUSIGHT</b>
             </div>
-            <p>Career, curriculum and university guidance for students and families — led by counselling psychologist Bhavana Sood.</p>
+            <p>Career, curriculum and university guidance for students and families — from the EDUSIGHT team in Dubai.</p>
             <p style={{ fontSize: '0.86rem' }}>{s.licence}</p>
           </div>
           <div>
@@ -38,7 +38,7 @@ export function Footer({ s }: { s: S }) {
           <div>
             <h4>EDUSIGHT</h4>
             <ul>
-              <li><Link href="/about">About Bhavana</Link></li>
+              <li><Link href="/about">About us</Link></li>
               <li><Link href="/awards">Awards</Link></li>
               <li><Link href="/blog">Blog</Link></li>
               <li><Link href="/reviews">Reviews</Link></li>

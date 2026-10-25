@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { db } from '@/lib/data'
+import { noName, db } from '@/lib/data'
 import { BuyButton } from '@/components/site/Buy'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
 import { PageHero } from '@/components/site/PageHero'
@@ -19,7 +19,7 @@ export default async function Assessments({ searchParams }: { searchParams: Prom
     ['Create your account', 'Students under 18 add a parent’s email — they approve with one click.'],
     ['Pay securely online', 'Card payments via Stripe in AED. Your tests unlock instantly.'],
     ['Take the tests at home', 'Around 8–12 minutes each. Progress saves as you go.'],
-    ['Get a reviewed report', 'Bhavana reviews your results, adds personal recommendations and emails the PDF.'],
+    ['Get a reviewed report', 'The EDUSIGHT team reviews your results, adds personal recommendations and emails the PDF.'],
   ]
   return (
     <>
@@ -52,7 +52,7 @@ export default async function Assessments({ searchParams }: { searchParams: Prom
                   <h3>{p.title}</h3>
                   <p className="muted" style={{ margin: 0 }}>{p.summary}</p>
                   <div className="price">{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
-                  <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{noName(f.text)}</li>)}</ul>
                   <div style={{ marginTop: 'auto' }}><BuyButton product={p.slug} label={`Get ${p.title.split('·')[0].trim()}`} className={`btn ${p.featured ? 'btn-primary' : 'btn-dark'}`} /></div>
                 </div>
               ))}

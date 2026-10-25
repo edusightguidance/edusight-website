@@ -3,7 +3,7 @@ import { Hl, Icon } from '@/components/site/Icon'
 import { ContactForm } from './ContactForm'
 import { SocialLinks } from '@/components/site/Social'
 
-export const metadata = { title: 'Contact', description: 'Book a consultation with Bhavana Sood, EDUSIGHT — career and university guidance in Dubai.' }
+export const metadata = { title: 'Contact', description: 'Book a consultation with the EDUSIGHT team — career and university guidance in Dubai.' }
 
 export default async function Contact({ searchParams }: { searchParams: Promise<{ topic?: string }> }) {
   const s = await getSettings()

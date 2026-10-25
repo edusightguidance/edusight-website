@@ -12,7 +12,7 @@ export function ContactForm({ topic }: { topic?: string }) {
     const r = await fetch('/api/inquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
     setState(r.ok ? 'done' : 'error')
   }
-  if (state === 'done') return <div className="alert ok"><b>Thank you!</b> Your message is with Bhavana. We’ll be in touch within one working day.</div>
+  if (state === 'done') return <div className="alert ok"><b>Thank you!</b> Your message is with the EDUSIGHT team. We’ll be in touch within one working day.</div>
   return (
     <form className="form" onSubmit={submit}>
       <h3>Send a message</h3>

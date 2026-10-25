@@ -87,7 +87,7 @@ function Report({ user, test, attempt }: Props) {
           </View>
           <Text style={[s.desc, { marginTop: 12 }]}>
             This report reflects self-reported preferences at the time of the test and is a starting point for discussion,
-            not a fixed label. Reviewed by Bhavana Sood, Counselling Psychologist & Career Advisor.
+            not a fixed label. Reviewed by the EDUSIGHT team.
           </Text>
         </View>
         <View style={s.foot} fixed>

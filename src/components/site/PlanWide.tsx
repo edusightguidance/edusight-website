@@ -1,3 +1,4 @@
+import { noName } from '@/lib/data'
 import type { ReactNode } from 'react'
 import type { Product } from '@/payload-types'
 import { Icon } from '@/components/site/Icon'
@@ -16,7 +17,7 @@ export function PlanWide({ p, action, summary }: { p: Product; action: ReactNode
       </div>
       <div className="pw-side">
         <p className="eyebrow" style={{ marginBottom: 6 }}>What’s included</p>
-        <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+        <ul className="ticks">{(p.features || []).map((f) => <li key={f.id}>{noName(f.text)}</li>)}</ul>
         <div className="pw-facts">
           <div><b>At home</b><span>Take it online, at your own pace</span></div>
           <div><b>Reviewed</b><span>By a counselling psychologist</span></div>

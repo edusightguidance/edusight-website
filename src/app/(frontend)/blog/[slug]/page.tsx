@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { draftMode } from 'next/headers'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { db, getSettings, getUser } from '@/lib/data'
-import { SITE, fmtDate, findPosts } from '@/lib/blog'
+import { SITE, fmtDate, findPosts, authorName } from '@/lib/blog'
 import { Rich } from '@/components/site/Rich'
 import { PostCard } from '@/components/site/PostCard'
 import { ShareBar } from '@/components/site/ShareBar'
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description,
     alternates: { canonical: `/blog/${p.slug}` },
-    openGraph: { type: 'article', title, description, publishedTime: p.publishedAt, authors: [p.author || 'Bhavana Sood'], ...(img?.url ? { images: [img.url] } : {}) },
+    openGraph: { type: 'article', title, description, publishedTime: p.publishedAt, authors: [authorName(p.author)], ...(img?.url ? { images: [img.url] } : {}) },
     twitter: { card: 'summary_large_image', title, description },
   }
 }
@@ -64,7 +64,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
     description: p.excerpt,
     datePublished: p.publishedAt,
     dateModified: p.updatedAt,
-    author: { '@type': 'Person', name: p.author || 'Bhavana Sood' },
+    author: { '@type': 'Organization', name: authorName(p.author) },
     publisher: { '@type': 'Organization', name: 'EDUSIGHT', logo: { '@type': 'ImageObject', url: `${SITE()}/logo.png` } },
     mainEntityOfPage: url,
     ...(img?.url ? { image: img.url.startsWith('http') ? img.url : `${SITE()}${img.url}` } : {}),
@@ -81,7 +81,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
         <div className="crumbs"><Link href="/blog">Blog</Link>{cats[0] && <> / <Link href={`/blog/category/${cats[0].slug}`}>{cats[0].title}</Link></>}</div>
         <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.6rem)' }}>{p.title}</h1>
         {p.excerpt && <p className="lead">{p.excerpt}</p>}
-        <p className="post-meta" style={{ marginBottom: 20 }}>By {p.author || 'Bhavana Sood'} · {fmtDate(p.publishedAt)}{p.readingMinutes ? ` · ${p.readingMinutes} min read` : ''}</p>
+        <p className="post-meta" style={{ marginBottom: 20 }}>By {authorName(p.author)} · {fmtDate(p.publishedAt)}{p.readingMinutes ? ` · ${p.readingMinutes} min read` : ''}</p>
         <ShareBar url={url} title={p.title || ''} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {img?.url && <img src={img.url} alt={img.alt || ''} style={{ borderRadius: 24, margin: '24px 0', width: '100%' }} />}

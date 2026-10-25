@@ -13,7 +13,10 @@ export const getUser = cache(async () => {
 
 export const getSettings = cache(async () => (await db()).findGlobal({ slug: 'site-settings' }))
 
-export const waLink = (num?: string | null, text = 'Hi Bhavana, I would like to know more about EDUSIGHT guidance.') =>
+export const waLink = (num?: string | null, text = 'Hi EDUSIGHT team, I would like to know more about EDUSIGHT guidance.') =>
   `https://wa.me/${(num || '971504518940').replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
 
 export const aed = (n?: number | null) => `AED ${Number(n || 0).toLocaleString('en-AE')}`
+
+/** Founder's name is hidden on the site for now: swap it for the team in admin-entered short text. */
+export const noName = (t?: string | null) => (t || '').replace(/Bhavana Sood|Bhavana/g, 'the EDUSIGHT team')

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PlanWide } from '@/components/site/PlanWide'
-import { db, getSettings } from '@/lib/data'
+import { noName, db, getSettings } from '@/lib/data'
 import { Hl, Icon, TINTS } from '@/components/site/Icon'
 import { QuickMatch } from '@/components/site/QuickMatch'
 import { findPosts } from '@/lib/blog'
@@ -40,7 +40,7 @@ function HeroArt() {
       </div>
       <div className="sticker" style={{ left: '8%', bottom: '4%', transform: 'rotate(-2deg)' }}>
         <span className="ico t-coral" style={{ width: 38, height: 38, margin: 0, borderRadius: 12 }}><Icon name="heart" size={20} /></span>
-        <span>1:1 with Bhavana<small>Counselling psychologist</small></span>
+        <span>1:1 guidance<small>With the EDUSIGHT team</small></span>
       </div>
     </div>
   )
@@ -149,7 +149,7 @@ export default async function Home() {
                 <p className="eyebrow">Online assessments</p>
                 <h2>Know yourself first. <Hl>Then</Hl> choose.</h2>
               </div>
-              <p className="lead">Take scientifically grounded tests online, at your own pace. Every report is personally reviewed by Bhavana before it reaches you — no robot verdicts.</p>
+              <p className="lead">Take scientifically grounded tests online, at your own pace. Every report is personally reviewed by the EDUSIGHT team before it reaches you — no robot verdicts.</p>
             </div>
             {products.docs.length === 1 ? (
               <PlanWide p={products.docs[0]} summary={products.docs[0].tagline || products.docs[0].summary} action={<Link href={`/assessments#${products.docs[0].slug}`} className="btn btn-primary">Take the Test</Link>} />
@@ -161,7 +161,7 @@ export default async function Home() {
                   <h3>{p.title}</h3>
                   <p className="muted" style={{ margin: 0 }}>{p.tagline}</p>
                   <div className="price">{p.price} <small>AED</small>{p.compareAt ? <s>{p.compareAt}</s> : null}</div>
-                  <ul className="ticks">{(p.features || []).slice(0, 4).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <ul className="ticks">{(p.features || []).slice(0, 4).map((f) => <li key={f.id}>{noName(f.text)}</li>)}</ul>
                   <Link href={`/assessments#${p.slug}`} className={`btn ${p.featured ? 'btn-primary' : 'btn-ghost'}`} style={{ marginTop: 'auto' }}>Choose</Link>
                 </div>
               ))}

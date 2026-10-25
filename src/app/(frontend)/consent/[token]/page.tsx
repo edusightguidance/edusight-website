@@ -14,7 +14,7 @@ export default async function Consent({ params }: { params: Promise<{ token: str
           {u ? (
             <>
               <h1 style={{ fontSize: '2.2rem' }}>Approve {u.name}’s account</h1>
-              <p className="muted">{u.name} ({u.email}){u.school ? `, ${u.school}` : ''} would like to take EDUSIGHT career assessments: personality, career interests and work values. Answers are confidential and each report is reviewed by counselling psychologist Bhavana Sood before it is shared with your child and you.</p>
+              <p className="muted">{u.name} ({u.email}){u.school ? `, ${u.school}` : ''} would like to take EDUSIGHT career assessments: personality, career interests and work values. Answers are confidential and each report is reviewed by the EDUSIGHT team before it is shared with your child and you.</p>
               <ConsentForm token={token} child={u.name.split(' ')[0]} />
             </>
           ) : (

@@ -11,7 +11,7 @@ export const metadata = { title: 'My portal', robots: { index: false } }
 const STATUS: Record<string, string> = {
   not_started: 'Ready to start',
   in_progress: 'In progress',
-  submitted: 'With Bhavana for review',
+  submitted: 'With the EDUSIGHT team for review',
   approved: 'Report being prepared',
   sent: 'Report ready',
 }

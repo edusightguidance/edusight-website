@@ -25,7 +25,7 @@ export async function GET(req: Request) {
       .sendEmail({
         to: [u.email, u.parentEmail].filter(Boolean) as string[],
         subject: 'How did we do? A quick review would mean a lot',
-        html: `<p>Dear ${u.name.split(' ')[0]},</p><p>A week ago we sent your EDUSIGHT report. If it helped you, would you take one minute to share your experience? It helps other families find the right guidance.</p><p><a href="${site}/reviews#write" style="background:#FF6B4A;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none">Leave a review</a></p><p>Thank you!<br/>Bhavana Sood, EDUSIGHT</p>`,
+        html: `<p>Dear ${u.name.split(' ')[0]},</p><p>A week ago we sent your EDUSIGHT report. If it helped you, would you take one minute to share your experience? It helps other families find the right guidance.</p><p><a href="${site}/reviews#write" style="background:#FF6B4A;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none">Leave a review</a></p><p>Thank you!<br/>The EDUSIGHT team</p>`,
       })
       .catch(() => null)
     await payload.update({ collection: 'users', id: u.id, data: { reviewRequestedAt: new Date().toISOString() }, overrideAccess: true })
